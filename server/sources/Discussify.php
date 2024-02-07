@@ -50,4 +50,26 @@ class Application {
             require_once ($path);
         }
     }
+    
+    // Singleton Instances Of Libraries
+    public static function agent() { return \Discussify\Core\Agent::i(); }
+    public static function cookies() { return \Discussify\Core\Cookies::i(); }
+    public static function registry() { return \Discussify\Core\Registry::i(); }
+    public static function request() { return \Discussify\Core\Request::i(); }
+    public static function session() { return \Discussify\Core\Session::i(); }
+    public static function settings() { return \Discussify\Core\Settings::i(); }
+    public static function vars() { return \Discussify\Core\Vars::i(); }
+    public static function db() { return \Discussify\Data\Database::i(); }
+    public static function queries() { return \Discussify\Data\Queries::i(); }
+    public static function cache() { return \Discussify\Data\Cache::i(); }
+    public static function localization() { return \Discussify\Localization\Localization::i(); }
+    public static function user() { return \Discussify\Users\User::i(); }
+    public static function dateTime() { return \Discussify\Core\DateTime::i(); }
+    public static function file() { return \Discussify\Files\File::i(); }
+    public static function math() { return \Discussify\Math\Math::i(); }
+    public static function utils() { return \Discussify\Helpers\Utils::i(); }
+    public static function apiForums() { return \Discussify\Api\Forums::i(); }
+    public static function apiUsers() { return \Discussify\Api\Users::i(); }
+    public static function globals() { return \Discussify\Core\Globals::i(); }
+
 }

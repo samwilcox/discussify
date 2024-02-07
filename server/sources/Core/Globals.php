@@ -12,7 +12,7 @@
  * https://license.discussify.com
  */
 
-namespace Discussify\Data;
+namespace Discussify\Core;
 
 // This file may not be accessed directly.
 if (!defined('APP_ACTIVE')) {
@@ -21,16 +21,22 @@ if (!defined('APP_ACTIVE')) {
 }
 
 /**
- * Class that determines which database driver to use and returns the proper instance.
+ * Class that handles all global variables for the application.
  * 
- * @package Discussify\Data
+ * @package Discussify\Core
  */
-class Database {
+class Globals extends \Discussify\Application {
     /**
      * Singleton instance of this class.
      * @var object
      */
     protected static $instance;
+    
+    /**
+     * Global variables collection.
+     * @var array
+     */
+    protected static $vars = [];
 
     /**
      * Returns singleton instance of this class.
@@ -38,17 +44,17 @@ class Database {
      * @return object - Singleton instance.
      */
     public static function i() {
-        if (!self::$instance) {
-            require (APP_PATH . 'Config.inc.php');
-            $connInfo = isset($cfg) ? $cfg : [];
-
-            switch ($connInfo['db_driver']) {
-                case 'mysqli':
-                    self::$instance = \Discussify\Data\Database\MySqliDatabase::i();
-                    break;
-            }
-        }
-
+        if (!self::$instance) self::$instance = new self;
         return self::$instance;
+    }
+
+    /**
+     * Builds al the various global variables for the application and then
+     * returns them all.
+     * 
+     * @return array - Collection of global variables.
+     */
+    public static function get() {
+        
     }
 }

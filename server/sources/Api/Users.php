@@ -61,6 +61,8 @@ class Users extends \Discussify\Application {
      * @param mixed $data - The incoming API data.
      */
     private function getUsername($data) {
+        $id = $data->data->id;
         
+        return self::user()->username($id);
     }
 }

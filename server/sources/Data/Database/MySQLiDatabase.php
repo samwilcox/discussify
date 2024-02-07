@@ -46,7 +46,7 @@ class MySqliDatabase extends \Discussify\Data\DatabaseStructure {
 
         self::$params = (object) [
             'connInfo' => issset($cfg) ? $cfg : [],
-            'dbPrefix' => self::$params->connInfo['dbPrefix'],
+            'dbPrefix' => self::$params->connInfo['db_prefix'],
             'totalQueries' => 0,
             'handle' => null,
             'time' => (object) [

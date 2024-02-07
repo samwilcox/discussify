@@ -21,11 +21,11 @@ if (!defined('APP_ACTIVE')) {
 }
 
 /**
- * Class that determines which database driver to use and returns the proper instance.
+ * Class that determines the appropriate instancve to return for the set database driver.
  * 
  * @package Discussify\Data
  */
-class Database {
+class Queries {
     /**
      * Singleton instance of this class.
      * @var object
@@ -44,7 +44,7 @@ class Database {
 
             switch ($connInfo['db_driver']) {
                 case 'mysqli':
-                    self::$instance = \Discussify\Data\Database\MySqliDatabase::i();
+                    self::$instance = \Discussify\Data\Queries\MySqliQueries::i();
                     break;
             }
         }
