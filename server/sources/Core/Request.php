@@ -33,24 +33,28 @@ class Request extends \Discussify\Application {
     protected static $instance;
 
     /**
-     * Collection of incoming data from _GET and _POST.
+     * Holds incoming GET and POST data.
      * @var array
      */
     protected static $incoming = [];
 
     /**
-     * Object containing information regarding search bots.
+     * Bot information object.
      * @var object
      */
     protected static $bot;
 
     /**
+     * Secret key for encoding using JWT.
+     * @var string
+     */
+    protected static $secretKey;
+
+    /**
      * Constructor that sets up the Request class.
      */
     public function __construct() {
-        self::$bot = new \stdClass();
-        self::parseRequest();
-        self::detectBots();
+        self::$secretKey = self::settings()->api_secret_key;
     }
 
     /**
@@ -64,13 +68,127 @@ class Request extends \Discussify\Application {
     }
 
     /**
-     * Parses the incoming request data into the incoming array collection.
-     * 
-     * TO-DO: Use a better and safer filter, for now its set to FILTER_UNSAFE_RAW.
+     * Handles the incoming API request.
      */
-    private function parseRequest() {
-        foreach ($_GET as $k => $v) self::$incoming[$k] = \filter_var($v, FILTER_UNSAFE_RAW);
+    public static function handleRequest() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            self::handlePostRequest();
+        } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            self::handleGetRequest();
+        } else {
+            // Invalid request method.
+            \http_response_code(405);
+            echo \json_encode(['error' => 'Invalid request method']);
+            exit();
+        }
+    }
+
+    /**
+     * Handles all incoming HTTP post requests.
+     */
+    private function handlePostRequest() {
+        // Verify JWT token!
+        $token = self::getTokenFromHeaders();
+
+        if (!$token || !self::verifyToken($token)) {
+            \http_response_code(401);
+            echo \json_encode(['error' => 'Invalid or missing token']);
+            exit();
+        }
+
+        // Handle the request now.
+        $requestData = \json_decode(file_get_contents('php://input'), true);
+
         foreach ($_POST as $k => $v) self::$incoming[$k] = \filter_var($v, FILTER_UNSAFE_RAW);
+
+        self::utils()->determineApiRoute($requestData);
+
+        $responseData = [
+            'message' => 'Received POST request from React',
+            'data' => $requestData
+        ];
+
+        // Send to React front-end.
+        self::sendResponse($responseData);
+    }
+
+    /**
+     * Handles all incoming HTTP get requests.
+     */
+    private function handleGetRequest() {
+        if (!$token || !self::verifyToken($token)) {
+            \http_response_code(401);
+            echo \json_encode(['error' => 'Invalid or missing token']);
+            exit();
+        }
+
+        foreach ($_GET as $k => $v) self::$incoming[$k] = \filter_var($v, FILTER_UNSAFE_RAW);
+
+        $returnData = self::utils()->determineApiRoute($requestData);
+
+        $responseData = [
+            'message' => 'Received GET request from React',
+            'data' => $returnData
+        ];
+
+        self::sendResponse($responseData);
+    }
+
+    /**
+     * Sends out a response to React.
+     * 
+     * @param mixed $data - Data to send.
+     */
+    private function sendResponse($data) {
+        \header('Content-Type: application/json');
+
+        echo \json_encode($data);
+        exit();
+    }
+
+    /**
+     * Extracts the token from the HTTP headers.
+     * 
+     * @return string - JWT token. Null if not found.
+     */
+    private function getTokenFromHeaders() {
+        $headers = getallheaders();
+
+        if (isset($headers['Authorization']) && \preg_match('/Bearer\s(\S+)/', $headers['Authorization'], $matches)) {
+            return $matches[1];
+        }
+
+        return null;
+    }
+
+    /**
+     * Generates a new token with the given data.
+     */
+    private function generateToken($data) {
+        $issuedAt = \time();
+        $expiration = $issuedAt + self::settings()->jwt_token_expiration_seconds;
+
+        $payload = [
+            'iat' => $issuedAt,
+            'exp' => $expiration,
+            'data' => $data
+        ];
+
+        return JWT::encode($payload, self::$secretKey);
+    }
+
+    /**
+     * Verifies the given token.
+     * 
+     * @return bool - True if valid, false otheriwse.
+     */
+    private function verifyToken($token) {
+        try {
+            $decoded = JWT::decode($token, self::$secretKey, ['HS256']);
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     /**

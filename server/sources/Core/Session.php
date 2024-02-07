@@ -20,6 +20,13 @@ if (!defined('APP_ACTIVE')) {
     exit(1);
 }
 
+// Need to include Firebase JSON Web Tokens 3rd party library.
+require_once (APP_PATH . '3rdParty/firebase-php-jwt/src/BeforeValidException.php');
+require_once (APP_PATH . '3rdParty/firebase-php-jwt/src/ExpiredException.php');
+require_once (APP_PATH . '3rdParty/firebase-php-jwt/src/SignatureInvalidException.php');
+require_once (APP_PATH . '3rdParty/firebase-php-jwt/src/JWT.php');
+use \Firebase\JWT\JWT;
+
 /**
  * Class that is responsible for management of all the user sessions.
  * This is to fight against any session hijacking.
@@ -45,10 +52,11 @@ class Session extends \Discussify\Application {
      */
     public function __construct() {
         self::$params = (object) [
-            'duration' => 15,
+            'duration' => 3600,
             'ipMatch' => false,
             'lifetime' => 0,
-            'session' => null
+            'session' => null,
+            'secretKey' => self::settings()->apiSecretKey
         ];
 
         self::initializeSessionData();
@@ -64,6 +72,98 @@ class Session extends \Discussify\Application {
         if (!self::$instance) self::$instance = new self;
         return self::$instance;
     }
+
+    /**
+     * Starts the user session.
+     */
+    public static function startSession() {
+        self::$params->duration = self::settings()->session_timeout * 60;
+        self::$params->ipMatch = self::settings()->session_ip_match;
+
+        // Are we storing session data in database?
+        if (self::settings()->sessionStoreMethod === 'dbstore') {
+            self::$params->lifetime = \get_cfg_var('session.gc_maxlifetime');
+
+            \session_set_save_handler(
+                [&$this, 'session_open'],
+                [&$this, 'session_close'],
+                [&$this, 'session_read'],
+                [&$this, 'session_write'],
+                [&$this, 'session_delete'],
+                [&$this, 'session_garbage_collection']
+            );
+        }
+
+        \session_start();
+        self::$params->session->id = \session_id();
+    }
+
+    /**
+     * Destroys the user session.
+     */
+    public static function destroySession() {
+        \session_destroy();
+    }
+
+    /**
+     * Generates a new JWT token.
+     * 
+     * @param string $userData - User data to send.
+     */
+    public static function generateToken($userData) {
+        $issuedAt = \time();
+        $expiration = $issuedAt + self::$params->duration;
+
+        $payload = [
+            'iat' => $issuedAt,
+            'exp' => $expiration,
+            'data' => $userData
+        ];
+
+        return JWT::encode($payload, self::$params->secretKey);
+    }
+
+    /**
+     * Verfies the given token.
+     * 
+     * @param string $token - Token to verify.
+     * @return <array|bool> - Data collection if verified, false otherwise.
+     */
+    public static function verifyToken($token) {
+        try {
+            $decoded = JWT::decode($token, self::$params->secretKey, ['HS256']);
+            return (array) $decoded->data;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Get's the JWT token from the headers.
+     * 
+     * @return string - Token from headers.
+     */
+    public static function getTokenFromHeaders() {
+        $headers = \getallheaders();
+        
+        if (isset($headers['Authorization']) && \preg_match('/Bearer\s(\S+)/', $headers['Authorization'], $matches)) {
+            return $matches[1];
+        }
+
+        return null;
+    }
+
+    /**
+     * Stores the session data into the database.
+     * 
+     * @param int $userId - ID of the user.
+     * @param string $sessionId - Session identifier string.
+     */
+    public static function storeSessionInDatabase($userId, $sessionId) {
+        
+    }
+
+
 
     /**
      * Initializes the data for the session object.
