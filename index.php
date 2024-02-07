@@ -12,3 +12,7 @@
  * https://license.discussify.com
  */
 
+define('ROOT_PATH', dirname(__FILE__) . '/');
+
+require_once (ROOT_PATH . 'server/sources/Discussify.php');
+\Discussify\Application\run();
