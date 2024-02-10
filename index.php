@@ -14,5 +14,5 @@
 
 define('ROOT_PATH', dirname(__FILE__) . '/');
 
-require_once (ROOT_PATH . 'server/sources/Discussify.php');
+require_once (ROOT_PATH . 'application/Discussify.php');
 \Discussify\Application\run();
