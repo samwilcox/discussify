@@ -22,3 +22,5 @@ define('APP_WRAPPER', 'index');
 define('CACHE_METHOD', 'files');
 define('CACHE_ENABLED', false);
 define('CACHE_DIR', 'cache');
+define('CACHE_THEMES_DIR', 'theme-cache');
+define('CACHE_DB_DIR', 'db-cache');

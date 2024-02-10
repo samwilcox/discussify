@@ -55,7 +55,7 @@ class Vars extends \Discussify\Application {
      * @param mixed $value - Value for the key.
      */
     public function __set($key, $value) {
-        self::$value[$key] = $value;
+        self::$vars[$key] = $value;
     }
 
     /**

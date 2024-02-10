@@ -59,7 +59,7 @@ class User extends \Discussify\Application {
     /**
      * Constructs the user class object with all the required fields.
      */
-    private function contructData() {
+    private function constructData() {
         self::$user = (object) [
             'id' => 0,
             'signedIn' => false,
@@ -319,5 +319,23 @@ class User extends \Discussify\Application {
         if ($data === null || \strlen($data) < 1) return '?';
 
         return $data;
+    }
+
+    /**
+     * Returns the theme ID.
+     * 
+     * @return int - Theme ID.
+     */
+    public static function themeId() {
+        return self::$user->themeId;
+    }
+
+    /**
+     * Returns the ID of the user.
+     * 
+     * @return int - User's identifier.
+     */
+    public static function id() {
+        return self::$user->id;
     }
  }

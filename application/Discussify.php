@@ -29,7 +29,27 @@ class Application {
         \date_default_timezone_set('UTC');
         \spl_autoload_register('self::autoloader', true, true);
 
+        \Discussify\Core\Settings::i();
+        \Discussify\Data\Database::i()->connect();
+        \Discussify\Data\Cache::i()->build();
+        \Discussify\Core\Settings::i()->loadSettings();
+        \Discussify\Core\Settings::i()->setupUrls();
+        \Discussify\Core\Request::i();
+        \Discussify\Core\Session::i()->load();
+        \Discussify\Users\User::i();
+        \Discussify\Localization\Localization::i();
+        \Discussify\Core\Registry::i();
 
+        $controller = isset(\Discussify\Core\Request::i()->controller) ? \ucfirst(\Discussify\Core\Request::i()->controller) : 'Index';
+        $controller = $controller . 'Controller';
+        $controllerNs = '\\Discussify\\Controllers\\' . $controller;
+        $action = isset(\Discussify\Core\Request::i()->action) ? \ucfirst(\Discussify\Core\Request::i()->action) : 'index';
+
+        $obj = new $controllerNs();
+        $obj->$action();
+
+        \session_write_close();
+        \Discussify\Data\Database::i()->disconnect();
     }
 
     /**
@@ -37,17 +57,18 @@ class Application {
      * @param string $className The name of the class to autoload.
      */
     public static function autoloader($className) {
-        $bits = \explode('\\', $className);
-        $class = \array_pop($bits);
+        if (\strpos($className, 'Discussify\\') !== 0) {
+            return;
+        }
 
-        if ($bits[0] != 'Discussify') return;
+        $class = \substr($className, \strlen('Discussify\\'));
+        $classFile = \str_replace('\\', '/', $class) . '.php';
+        $path = __DIR__ . '/' . $classFile;
 
-        \array_shift($bits);
-
-        $path = \realpath(\dirname(__FILE__) . '/' . \str_replace('\\', '/', implode('\\', $bits)) . '/' . '.php');
-
-        if (\strlen($path) > 0) {
-            require_once ($path);
+        if (\file_exists($path)) {
+            require $path;
+        } else {
+            throw new \Exception('Class file not found: ' . $path);
         }
     }
     
@@ -71,5 +92,6 @@ class Application {
     public static function apiForums() { return \Discussify\Api\Forums::i(); }
     public static function apiUsers() { return \Discussify\Api\Users::i(); }
     public static function globals() { return \Discussify\Core\Globals::i(); }
-
+    public static function sanitizer() { return \Discussify\Helpers\Sanitizer::i(); }
+    public static function theme() { return \Discussify\Themes\Theme::i(); }
 }

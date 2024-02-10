@@ -39,7 +39,7 @@ class Cache {
      */
     public static function i() {
         if (!self::$instance) {
-            switch (CACHE) {
+            switch (CACHE_ENABLED) {
                 case true:
                     switch (CACHE_METHOD) {
                         case 'filecache':

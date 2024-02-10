@@ -25,7 +25,7 @@ if (!defined('APP_ACTIVE')) {
  * 
  * @package Discussify\Data\Cache
  */
-class FileCache extends \Discussify\Data\DataCache implements \Discussify\Data\CacheStructure {
+class FileCache extends \Discussify\Data\Cache\DataCache implements \Discussify\Data\CacheStructure {
     /**
      * Singleton instance of this class.
      * @var object
@@ -54,7 +54,7 @@ class FileCache extends \Discussify\Data\DataCache implements \Discussify\Data\C
      * @param string $table - Table to get sorting for.
      * @return string - sorting string.
      */
-    private function sorting($table) {
+    private static function sorting($table) {
         $sorting = null;
 
         foreach (self::$sorting as $k => $v) {
@@ -83,11 +83,14 @@ class FileCache extends \Discussify\Data\DataCache implements \Discussify\Data\C
      */
     public static function build() {
         $cacheDir = CACHE_DIR;
+        $dbCacheDir = CACHE_DB_DIR;
 
         if (\substr($cacheDir, ( \strlen($cacheDir) - 1), \strlen($cacheDir)) === '/') $cacheDir = \substr($cacheDir, 0, (\strlen($cacheDir) - 1));
         if (\substr($cacheDir, 0, 1) === '/') $cacheDir = \substr($cacheDir, 1, \strlen($cacheDir));
+        if (\substr($dbCacheDir, ( \strlen($dbCacheDir) - 1), \strlen($dbCacheDir)) === '/') $dbCacheDir = \substr($dbCacheDir, 0, (\strlen($dbCacheDir) - 1));
+        if (\substr($dbCacheDir, 0, 1) === '/') $dbCacheDir = \substr($dbCacheDir, 1, \strlen($dbCacheDir));
 
-        $cacheDir = APP_PATH . $cacheDir . '/';
+        $cacheDir = APP_PATH . $cacheDir . '/' . $dbCacheDir . '/';
 
         if (!file_exists($cacheDir)) throw new \Discussify\Exceptions\CacheException('Cache directory does not exist.');
         if (!is_readable($cacheDir)) throw new \Discussify\Exceptions\CacheException('Cache directory is not readable.');
@@ -134,15 +137,18 @@ class FileCache extends \Discussify\Data\DataCache implements \Discussify\Data\C
         $sql = self::getCache($table, $sorting);
 
         $cacheDir = CACHE_DIR;
+        $dbCacheDir = CACHE_DB_DIR;
 
         if (\substr($cacheDir, ( \strlen($cacheDir) - 1), \strlen($cacheDir)) === '/') $cacheDir = \substr($cacheDir, 0, (\strlen($cacheDir) - 1));
         if (\substr($cacheDir, 0, 1) === '/') $cacheDir = \substr($cacheDir, 1, \strlen($cacheDir));
+        if (\substr($dbCacheDir, ( \strlen($dbCacheDir) - 1), \strlen($dbCacheDir)) === '/') $dbCacheDir = \substr($dbCacheDir, 0, (\strlen($dbCacheDir) - 1));
+        if (\substr($dbCacheDir, 0, 1) === '/') $dbCacheDir = \substr($dbCacheDir, 1, \strlen($dbCacheDir));
 
         if (!file_exists($cacheDir)) throw new \Discussify\Exceptions\CacheException('Cache directory does not exist.');
         if (!is_readable($cacheDir)) throw new \Discussify\Exceptions\CacheException('Cache directory is not readable.');
         if (!is_writable($cacheDir)) throw new \Discussify\Exceptions\CacheException('Cache directory is not writable.');
 
-        $cacheFile = $cacheDir . $table . '.cache.php';
+        $cacheFile = ROOT_PATH . $cacheDir . '/' . CACHE_DB_DIR . '/' . $table . '.cache.php';
 
         while ($record = self::db()->fetchAssoc($sql)) $records[] = $record;
 
@@ -175,7 +181,7 @@ class FileCache extends \Discussify\Data\DataCache implements \Discussify\Data\C
      * @return object - JSON object of data.
      */
     public static function getData($table) {
-        return (\count(self::$cache[$table] !== null ? self::$cache[$table] : []) > 0) ? self::$cache[$table] : [];
+        return (isset(self::$cache[$table]) && \is_array(self::$cache[$table]) && \count(self::$cache[$table]) > 0) ? self::$cache[$table] : [];
     }
 
     /**

@@ -20,13 +20,6 @@ if (!defined('APP_ACTIVE')) {
     exit(1);
 }
 
-// Need to include Firebase JSON Web Tokens 3rd party library.
-require_once (APP_PATH . '3rdParty/firebase-php-jwt/src/BeforeValidException.php');
-require_once (APP_PATH . '3rdParty/firebase-php-jwt/src/ExpiredException.php');
-require_once (APP_PATH . '3rdParty/firebase-php-jwt/src/SignatureInvalidException.php');
-require_once (APP_PATH . '3rdParty/firebase-php-jwt/src/JWT.php');
-use \Firebase\JWT\JWT;
-
 /**
  * Class that is responsible for management of all the user sessions.
  * This is to fight against any session hijacking.
@@ -41,7 +34,7 @@ class Session extends \Discussify\Application {
     protected static $instance;
 
     /**
-     * Class paramaters object.
+     * Object for handling the class properties.
      * @var object
      */
     protected static $params;
@@ -52,15 +45,14 @@ class Session extends \Discussify\Application {
      */
     public function __construct() {
         self::$params = (object) [
-            'duration' => 3600,
+            'duration' => 15,
             'ipMatch' => false,
             'lifetime' => 0,
-            'session' => null,
-            'secretKey' => self::settings()->apiSecretKey
+            'session' => null
         ];
 
-        self::initializeSessionData();
-        self::sessionGc();
+        self::constructData();
+        self::gc();
     }
 
     /**
@@ -74,101 +66,9 @@ class Session extends \Discussify\Application {
     }
 
     /**
-     * Starts the user session.
+     * Contructs the session data parameters object.
      */
-    public static function startSession() {
-        self::$params->duration = self::settings()->session_timeout * 60;
-        self::$params->ipMatch = self::settings()->session_ip_match;
-
-        // Are we storing session data in database?
-        if (self::settings()->sessionStoreMethod === 'dbstore') {
-            self::$params->lifetime = \get_cfg_var('session.gc_maxlifetime');
-
-            \session_set_save_handler(
-                [&$this, 'session_open'],
-                [&$this, 'session_close'],
-                [&$this, 'session_read'],
-                [&$this, 'session_write'],
-                [&$this, 'session_delete'],
-                [&$this, 'session_garbage_collection']
-            );
-        }
-
-        \session_start();
-        self::$params->session->id = \session_id();
-    }
-
-    /**
-     * Destroys the user session.
-     */
-    public static function destroySession() {
-        \session_destroy();
-    }
-
-    /**
-     * Generates a new JWT token.
-     * 
-     * @param string $userData - User data to send.
-     */
-    public static function generateToken($userData) {
-        $issuedAt = \time();
-        $expiration = $issuedAt + self::$params->duration;
-
-        $payload = [
-            'iat' => $issuedAt,
-            'exp' => $expiration,
-            'data' => $userData
-        ];
-
-        return JWT::encode($payload, self::$params->secretKey);
-    }
-
-    /**
-     * Verfies the given token.
-     * 
-     * @param string $token - Token to verify.
-     * @return <array|bool> - Data collection if verified, false otherwise.
-     */
-    public static function verifyToken($token) {
-        try {
-            $decoded = JWT::decode($token, self::$params->secretKey, ['HS256']);
-            return (array) $decoded->data;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    /**
-     * Get's the JWT token from the headers.
-     * 
-     * @return string - Token from headers.
-     */
-    public static function getTokenFromHeaders() {
-        $headers = \getallheaders();
-        
-        if (isset($headers['Authorization']) && \preg_match('/Bearer\s(\S+)/', $headers['Authorization'], $matches)) {
-            return $matches[1];
-        }
-
-        return null;
-    }
-
-    /**
-     * Stores the session data into the database.
-     * 
-     * @param int $userId - ID of the user.
-     * @param string $sessionId - Session identifier string.
-     */
-    public static function storeSessionInDatabase($userId, $sessionId) {
-        
-    }
-
-
-
-    /**
-     * Initializes the data for the session object.
-     */
-    private function initializeSessionData() {
+    private static function constructData() {
         self::$params->session = (object) [
             'id' => 0,
             'expires' => 0,
@@ -176,58 +76,64 @@ class Session extends \Discussify\Application {
             'location' => '',
             'forumId' => 0,
             'topicId' => 0,
-            'memberId' => 0,
+            'userId' => 0,
             'display' => 0,
             'admin' => false
         ];
     }
 
     /**
-     * Manages the user session data.
+     * Loads up the session and verifies that no session-hijacking is happening
+     * by storing all sessions into the database for better accounting abilities.
      */
-    public static function management() {
-        self::$params->duration = self::settings()->session_timeout * 60;
-        self::$params->ipMatch = self::settings()->session_ip_match;
+    public static function load() {
+        self::$params->duration = self::settings()->session_duration_seconds * 60;
+        self::$params->ipMatch = self::settings()->session_ip_matching;
 
-        // Are we storing session data in database?
-        if (self::settings()->sessionStoreMethod === 'dbstore') {
+        if (self::settings()->session_store_method === 'dbstore') {
             self::$params->lifetime = \get_cfg_var('session.gc_maxlifetime');
 
             \session_set_save_handler(
-                [&$this, 'session_open'],
-                [&$this, 'session_close'],
-                [&$this, 'session_read'],
-                [&$this, 'session_write'],
-                [&$this, 'session_delete'],
-                [&$this, 'session_garbage_collection']
+                [&$this, 'sessionOpen'],
+                [&$this, 'sessionClose'],
+                [&$this, 'sessionRead'],
+                [&$this, 'sessionWrite'],
+                [&$this, 'sessionDelete'],
+                [&$this, 'sessionGc']
             );
         }
 
         \session_start();
-        self::$params->session->id = \session_id();
 
-        // If an user token is set, then we will sign the member in, depending on factors of course.
-        if (isset($_COOKIE['discussify_user_token'])) {
-            $token = $_COOKIE['discussify_user_token'];
+        // Do we need to get a session ID from query string (if its an AJAX request).
+        if (isset(self::request()->controller) && self::request()->controller === 'ajax' && isset(self::request()->sid)) {
+            self::$params->session->id = \session_id(self::request()->sid);
+        } else {
+            self::$params->session->id = \session_id();
+        }
+
+        // Check to see if a user token exists in a cookie or not.
+        // If exists, verify user; sign them in if not signed in.
+        if (self::cookies()->exists('discussify_user_token')) {
+            $token = self::cookies()->discussify_user_token;
             $found = false;
-            $data = self::cache()->getData('members_devices');
+            $data = self::cache()->getData('users_devices');
 
             foreach ($data as $device) {
-                if ($device->user_key === $token) {
+                if ($device->sign_in_key === $token) {
                     $found = true;
-                    $memberId = $device->member_id;
+                    $userId = $device->user_id;
                     break;
                 }
             }
 
             switch ($found) {
                 case true:
-                    $data = self::cache()->massGetData(['members' => 'members', 'sessions' => 'sessions']);
+                    $data = self::cache()->massGetData(['users' => 'users', 'sessions' => 'sessions']);
 
-                    foreach ($data->members as $member) {
-                        if ( $member->id === $memberId) {
-                            $username = $member->username;
-                            $displayOnList = $member->display_online_list;
+                    foreach ($data->users as $user) {
+                        if ($user->id === $userId) {
+                            $display = $user->active_users_display;
                             break;
                         }
                     }
@@ -235,33 +141,34 @@ class Session extends \Discussify\Application {
                     $found = false;
 
                     foreach ($data->sessions as $session) {
-                        if ($session->member_id === $memberId) {
+                        if ($session->user_id === $userId) {
                             $found = true;
                             $ipAddress = $session->ip_address;
-                            $userAgent = $session->agent;
-                            $adminSess = $session->admin;
+                            $userAgent = $session->user_agent;
+                            $admin = $session->admin;
+                            break;
                         }
                     }
 
                     switch ($found) {
                         case true:
-                            switch ($params->ipMatch) {
+                            switch (self::$params->ipMatch) {
                                 case true:
                                     if ($ipAddress !== self::agent()->get('ip') || $userAgent !== self::agent()->get('agent')) {
                                         self::destroySession();
                                     } else {
-                                        self::updateSession(['id' => $memberId, 'username' => $username, 'display' => $displayOnList, 'admin' => $adminSess]);
+                                        self::updateSession(['id' => $userId, 'display' => $display, 'admin' => $admin]);
                                     }
                                     break;
 
                                 case false:
-                                    self::updateSession(['id' => $memberId, 'username' => $username, 'display' => $displayOnList, 'admin' => $adminSess]);
+                                    self::updateSession(['id' => $userId, 'display' => $display, 'admin' => $admin]);
                                     break;
                             }
                             break;
 
                         case false:
-                            self::createSession(['id' => $memberId, 'username' => $username, 'display' => $displayOnList, 'admin' => 0]);
+                            self::createSession(['id' => $userId, 'display' => $display, 'admin' => $admin]);
                             break;
                     }
                     break;
@@ -278,7 +185,8 @@ class Session extends \Discussify\Application {
                 if ($session->id === self::$params->session->id) {
                     $found = true;
                     $ipAddress = $session->ip_address;
-                    $userAgent = $session->agent;
+                    $userAgent = $session->user_agent;
+                    break;
                 }
             }
 
@@ -304,5 +212,238 @@ class Session extends \Discussify\Application {
                     break;
             }
         }
+    }
+
+    /**
+     * Destroys the current sessions and the generates a brand new
+     * session identifier.
+     */
+    private static function destroySession() {
+        self::cookies()->deleteCookie('discussify_user_token');
+
+        \session_unset();
+        \session_destroy();
+
+        if (self::cookies()->exists(\session_name())) self::cookies()->deleteCookie(\session_name(), true);
+
+        self::deleteUserSession();
+        unset($_SESSION['discussify_user_id']);
+        \session_regenerate_id(true);
+        self::redirect()->go(self::seo()->url('index'));
+    }
+
+    /**
+     * Updates the current user's session.
+     * 
+     * @param array $data - Optional user data collection.
+     */
+    private static function updateSession($data = null) {
+        self::$params->session->expires = \time() + self::$params->duration;
+        self::$params->session->lastClick = \time();
+        self::$params->session->location = $_SERVER['REQUEST_URI'];
+        self::$params->session->display = 0;
+
+        if ($data !== null) {
+            self::$params->session->userId = $data['id'];
+            self::$params->session->display = $data['display'];
+            self::$params->session->admin = $data['admin'] === 1 ? true : false;
+            $_SESSION['discussify_user_id'] = $data['id'];
+        } else {
+            unset($_SESSION['discussify_user_id']);
+        }
+
+        self::updateUserSession();
+    }
+
+    /**
+     * Creates a brand new session in the database for the current user.
+     * 
+     * @param array $data - Optional user data collection.
+     */
+    private static function createSession($data = null) {
+        self::$params->session->expires = \time() + self::$params->duration;
+        self::$params->session->lastClick = \time();
+        self::$params->session->location = $_SERVER['REQUEST_URI'];
+
+        if ($data !== null) {
+            self::$params->session->userId = $data['id'];
+            self::$params->session->display = $data['id'];
+            self::$params->session->admin = $data['admin'] === 1 ? true : false;
+        } else {
+            self::$params->session->userId = 0;
+            self::$params->session->display = 0;
+            self::$params->session->admin = false;
+
+            unset($_SESSION['discussify_user_id']);
+        }
+
+        self::createUserSession();
+    }
+
+    /**
+     * Creates a brand new user session in the database using the class
+     * properties.
+     */
+    private static function createUserSession() {
+        if (self::request()->controller !== 'source') {
+            self::db()->query(self::queries()->insertUserSession(),
+            [
+                'id' => self::$params->session->id,
+                'userId' => self::$params->session->userId,
+                'expires' => self::$params->session->expires,
+                'lastClick' => self::$params->session->lastClick,
+                'location' => self::$params->session->location,
+                'forumId' => self::$params->session->forumId,
+                'topicId' => self::$params->session->topicId,
+                'ipAddress' => self::agent()->get('ip'),
+                'userAgent' => self::agent()->get('agent'),
+                'hostname' => self::agent()->get('hostname'),
+                'display' => self::$params->session->display,
+                'searchBot' => self::request()->botData()->present ? 1 : 0,
+                'searchBotName' => self::request()->botData()->name,
+                'admin' => self::$params->session->admin ? 1 : 0
+            ]);
+
+            self::cache()->update('sessions');
+        }
+    }
+
+    /**
+     * Updates the current user's session in the database.
+     */
+    private static function updateUserSession() {
+        if (self::request()->controller !== 'source') {
+            self::db()->query(self::queries()->updateUserSession(), [
+                'expires' => self::$params->session->expires,
+                'lastClick' => self::$params->session->lastClick,
+                'location' => self::$params->session->location,
+                'display' => self::$params->session->display,
+                'forumId' => self::$params->session->forumId,
+                'topicId' => self::$params->session->topicId,
+                'id' => self::$params->session->id
+            ]);
+
+            self::cache()->update('sessions');
+        }
+    }
+
+    /**
+     * Deletes the current user's session and creates a brand new one
+     * in the database.
+     */
+    private static function deleteUserSession() {
+        if (self::request()->controller !== 'source') {
+            self::db()->query(self::queries()->deleteUserSession(), ['id' => self::$params->session->id]);
+            self::cache()->update('sessions');
+        }
+    }
+
+    /**
+     * Performs garbage collection on user sessions.
+     * If an user's session expires, remove it.
+     */
+    private static function gc() {
+        self::db()->query(self::queries()->deleteUserSessionGc());
+        if (self::db()->affectedRows() > 0) self::cache()->update('sessions');
+    }
+
+    /**
+     * Magic function for opening sessions in files.
+     */
+    public function sessionOpen() {
+        // Left blank on purpose.
+    }
+
+    /**
+     * Magic function for closing sessions in files.
+     */
+    public function sessionClose() {
+        // Left blank on purpose.
+    }
+
+    /**
+     * Magic function for reading data from sessions in files.
+     * 
+     * @param string $id - Session identifier.
+     * @return mixed - Session data.
+     */
+    public function sessionRead($id) {
+        $data = '';
+        $time = \time();
+
+        $sql = self::db()->query(self::queries()->selectSessionDataFromStore(), ['id' => $id, 'time' => $time]);
+
+        if (self::db()->numRows($sql) > 0) {
+            $row = self::db()->fetchArray($sql);
+            $data = $row['data'];
+        }
+
+        self::db()->freeResult($sql);
+
+        return $data;
+    }
+
+    /**
+     * Magic function that writes session data to files.
+     * 
+     * @param string $id - Session identifier.
+     * @param mixed $data - Data to store in the session.
+     * @return bool - Just returns true (PHP your weird!).
+     */
+    public function sessionWrite($id, $data) {
+        $time = \time();
+        $sql = self::db()->query(self::queries()->selectSessinFromStore(), ['id' => $id]);
+        $total = self::db()->numRows();
+        self::db()->freeResult($sql);
+
+        if ($total === 0) {
+            self::db()->query(self::queries()->insertSessionStoreNew(), ['id' => $id, 'data' => $data, 'lifetime' => self::$params->lifetime]);
+        } else {
+            self::db()->query(self::queries()->updateSessionStoreData(), ['id' => $id, 'data' => $data, 'lifetime' => self::$params->lifetime]);
+        }
+
+        return true;
+    }
+
+    /**
+     * Magic function that deletes the given session from the database.
+     */
+    public function sessionDelete($id) {
+        self::db()->query(self::queries()->deleteSessionFromSessionStore(), ['id' => $id]);
+    }
+
+    /**
+     * Magic function that performs garbage collection on session
+     * data stores.
+     */
+    public function sessionGc() {
+        self::db()->query(self::queries()->deleteFromSessionStoreGc());
+    }
+
+    /**
+     * Returns the current session identifying string.
+     * 
+     * @return string - Current session identifier.
+     */
+    public static function id() {
+        return self::$params->session->id;
+    }
+
+    /**
+     * Sets the forum identifier for the session.
+     * 
+     * @param int $id - Forum identifier.
+     */
+    public static function setForumId($id) {
+        self::$params->session->forumId = $id;
+    }
+
+    /**
+     * Sets the topic identifier for the session.
+     * 
+     * @param int $id - Topic identifier.
+     */
+    public static function setTopicId($id) {
+        self::$params->session->topicId = $id;
     }
 }

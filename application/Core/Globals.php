@@ -55,6 +55,6 @@ class Globals extends \Discussify\Application {
      * @return array - Collection of global variables.
      */
     public static function get() {
-        
+        return self::$vars;
     }
 }

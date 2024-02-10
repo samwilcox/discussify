@@ -209,4 +209,49 @@ class Localization extends \Discussify\Application {
 
         return $words[$category][$stringId];
     }
+
+    /**
+     * Takes in the given HTML or string and replaces all localization tags
+     * with the proper localization words.
+     * 
+     * @param string $output - HTML or string.
+     * @return string - HTML or string with replacements.
+     */
+    public static function outputWordsReplacement(&$output) {
+        if (!$output) return;
+
+        \preg_match_all('/\${\[([^]]+)\]\[([^]]+)\]}/', $output, $matches, PREG_SET_ORDER);
+        $newMatch = [];
+
+        foreach ($matches as $match) {
+            $newMatch[] = [$match[1], $match[2]];
+        }
+
+        foreach ($newMatch as $m) {
+            $output = \str_replace($m, self::getWords($m[0], $m[1]), $output);
+        }
+    }
+
+    /**
+     * Takes the given content and replaces all localization tags
+     * with the proper localization words from the given language pack ID.
+     * 
+     * @param string $content - Content to replace tags within.
+     * @param int $id - Language pack ID to use.
+     * @return string - Content with replacements.
+     */
+    public static function outputWordsReplacementWithId(&$content, $id = null) {
+        if (!$content) return;
+
+        \preg_match_all('/\${\[([^]]+)\]\[([^]]+)\]}/', $content, $matches, PREG_SET_ORDER);
+        $newMatch = [];
+
+        foreach ($matches as $match) {
+            $newMatch[] = [$match[1], $match[2]];
+        }
+
+        foreach ($newMatch as $m) {
+            $content = \str_replace($m, self::getWordsSpecificId($m[0], $M[1]), $content);
+        }
+    }
 }

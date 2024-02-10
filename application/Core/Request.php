@@ -45,16 +45,13 @@ class Request extends \Discussify\Application {
     protected static $bot;
 
     /**
-     * Secret key for encoding using JWT.
-     * @var string
-     */
-    protected static $secretKey;
-
-    /**
-     * Constructor that sets up the Request class.
+     * Constructor that sets up the class.
      */
     public function __construct() {
-        self::$secretKey = self::settings()->api_secret_key;
+        self::$bot = (object) [
+            'name' => '',
+            'present' => false
+        ];
     }
 
     /**
@@ -68,126 +65,40 @@ class Request extends \Discussify\Application {
     }
 
     /**
-     * Handles the incoming API request.
+     * Parses the incoming request, detecting controllers and actions.
      */
-    public static function handleRequest() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            self::handlePostRequest();
-        } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            self::handleGetRequest();
-        } else {
-            // Invalid request method.
-            \http_response_code(405);
-            echo \json_encode(['error' => 'Invalid request method']);
-            exit();
-        }
-    }
+    private static function parseRequest() {
+        foreach ($_GET as $k => $v) self::$incoming[$k] = \filter_var($v, FILTER_SANITIZE_STRING);
+        foreach ($_POST as $k => $v) self::$incoming[$k] = \filter_var($v, FILTER_SANITIZE_STRING);
 
-    /**
-     * Handles all incoming HTTP post requests.
-     */
-    private function handlePostRequest() {
-        // Verify JWT token!
-        $token = self::getTokenFromHeaders();
+        $bits = null;
 
-        if (!$token || !self::verifyToken($token)) {
-            \http_response_code(401);
-            echo \json_encode(['error' => 'Invalid or missing token']);
-            exit();
+        if (self::settings()->seo_enabled) {
+            if (\strlen($_SERVER['QUERY_STRING']) > 0) {
+                if (!\stripos($_SERVER['QUERY_STRING'], '&')) {
+                    if (\count($_POST) < 1) {
+                        $bits = \explode('/', $_SERVER['QUERY_STRING']);
+                    }
+                }
+            }
         }
 
-        // Handle the request now.
-        $requestData = \json_decode(file_get_contents('php://input'), true);
+        if ($bits !== null) {
+            \array_shift($bits);
 
-        foreach ($_POST as $k => $v) self::$incoming[$k] = \filter_var($v, FILTER_UNSAFE_RAW);
+            if (isset($bits[0])) self::$incoming['controller'] = $bits[0];
+            if (isset($bits[1])) self::$incoming['action'] = $bits[1];
+            
+            // Purge the controller and action from the array.
+            \array_slice($bits, 2);
 
-        self::utils()->determineApiRoute($requestData);
-
-        $responseData = [
-            'message' => 'Received POST request from React',
-            'data' => $requestData
-        ];
-
-        // Send to React front-end.
-        self::sendResponse($responseData);
-    }
-
-    /**
-     * Handles all incoming HTTP get requests.
-     */
-    private function handleGetRequest() {
-        if (!$token || !self::verifyToken($token)) {
-            \http_response_code(401);
-            echo \json_encode(['error' => 'Invalid or missing token']);
-            exit();
-        }
-
-        foreach ($_GET as $k => $v) self::$incoming[$k] = \filter_var($v, FILTER_UNSAFE_RAW);
-
-        $returnData = self::utils()->determineApiRoute($requestData);
-
-        $responseData = [
-            'message' => 'Received GET request from React',
-            'data' => $returnData
-        ];
-
-        self::sendResponse($responseData);
-    }
-
-    /**
-     * Sends out a response to React.
-     * 
-     * @param mixed $data - Data to send.
-     */
-    private function sendResponse($data) {
-        \header('Content-Type: application/json');
-
-        echo \json_encode($data);
-        exit();
-    }
-
-    /**
-     * Extracts the token from the HTTP headers.
-     * 
-     * @return string - JWT token. Null if not found.
-     */
-    private function getTokenFromHeaders() {
-        $headers = getallheaders();
-
-        if (isset($headers['Authorization']) && \preg_match('/Bearer\s(\S+)/', $headers['Authorization'], $matches)) {
-            return $matches[1];
-        }
-
-        return null;
-    }
-
-    /**
-     * Generates a new token with the given data.
-     */
-    private function generateToken($data) {
-        $issuedAt = \time();
-        $expiration = $issuedAt + self::settings()->jwt_token_expiration_seconds;
-
-        $payload = [
-            'iat' => $issuedAt,
-            'exp' => $expiration,
-            'data' => $data
-        ];
-
-        return JWT::encode($payload, self::$secretKey);
-    }
-
-    /**
-     * Verifies the given token.
-     * 
-     * @return bool - True if valid, false otheriwse.
-     */
-    private function verifyToken($token) {
-        try {
-            $decoded = JWT::decode($token, self::$secretKey, ['HS256']);
-            return true;
-        } catch (\Exception $e) {
-            return false;
+            if (\count($bits) > 0) {
+                for ($i = 0; $i < \count($bits); $i) {
+                    if (isset($bits[$i + 1])) {
+                        self::$incoming[$bits[$i]] = $bits[$i + 1];
+                    }
+                }
+            }
         }
     }
 
@@ -195,8 +106,6 @@ class Request extends \Discussify\Application {
      * Checks whether the current request is a search bot or not.
      */
     private function detectBots() {
-        self::$bot->name;
-        self::$bot->present = false;
         $bots = \unserialize(self::settings()->searchBotList);
 
         for ($i = 0; $i < \count($bots); $i++) {

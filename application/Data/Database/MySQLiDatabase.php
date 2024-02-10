@@ -25,7 +25,7 @@ if (!defined('APP_ACTIVE')) {
  * 
  * @package \Discussify\Data\Database
  */
-class MySqliDatabase extends \Discussify\Data\DatabaseStructure {
+class MySqliDatabase implements \Discussify\Data\DatabaseStructure {
     /**
      * Singleton instance of this class.
      * @var object
@@ -45,7 +45,7 @@ class MySqliDatabase extends \Discussify\Data\DatabaseStructure {
         require (APP_PATH . 'Config.inc.php');
 
         self::$params = (object) [
-            'connInfo' => issset($cfg) ? $cfg : [],
+            'connInfo' => isset($cfg) ? $cfg : [],
             'dbPrefix' => self::$params->connInfo['db_prefix'],
             'totalQueries' => 0,
             'handle' => null,
@@ -257,7 +257,7 @@ class MySqliDatabase extends \Discussify\Data\DatabaseStructure {
      * @return string - Escaped string.
      */
     public static function escapeString($str) {
-        return $params->handle->real_escape_string($str);
+        return self::$params->handle->real_escape_string($str);
     }
 
     /**
@@ -277,7 +277,7 @@ class MySqliDatabase extends \Discussify\Data\DatabaseStructure {
      * 
      * @param string $mode - Mode to execute (either start or stop).
      */
-    private function timer($mode) {
+    private static function timer($mode) {
         switch ($mode) {
             case 'start':
                 self::$params->time->start = \microtime(true);

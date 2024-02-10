@@ -80,6 +80,15 @@ class Settings extends \Discussify\Application {
     }
 
     /**
+     * Sets up the application URLs.
+     */
+    public static function setupUrls() {
+        $appUrl = APP_URL;
+        self::vars()->baseUrl = \substr($appUrl, \strlen($appUrl) - 1, \strlen($appUrl)) === '' ? \substr($appUrl, 0, \strlen($appUrl) - 1) : $appUrl;
+        self::vars()->wrapper = self::vars()->baseUrl . '/' . APP_WRAPPER . '.php';
+    }
+
+    /**
      * Magic function that returns the value for the given key.
      * 
      * @param string $key - Key of setting.

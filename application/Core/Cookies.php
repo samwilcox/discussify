@@ -63,4 +63,32 @@ class Cookies {
         unset($_COOKIE[$name]);
         \setcookie($name, '', time() - 3600, $phpCookie ? '' : COOKIE_PATH, $phpCookie ? '' : COOKIE_DOMAIN);
     }
+
+    /**
+     * Returns whether the given cookie currently exists.
+     * 
+     * @param string $name - The cookie name to check.
+     * @return bool - True if exists, false otherwise.
+     */
+    public static function exists($name) {
+        if (isset($_COOKIE[$name])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Magic function to return the value for the given cookie.
+     * 
+     * @param string $name - The cookie name.
+     * @return mixed - Value of given cookie; null if doesn't exist.
+     */
+    public function __get($name) {
+        if (self::exists($name)) {
+            return $_COOKIE[$name];
+        }
+
+        return null;
+    }
 }

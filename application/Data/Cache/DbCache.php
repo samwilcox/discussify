@@ -25,7 +25,7 @@ if (!defined('APP_ACTIVE')) {
  * 
  * @package Discussify\Data\Cache
  */
-class DbCache extends \Discussify\Data\DataCache implements \Discussify\Data\CacheStructure {
+class DbCache extends \Discussify\Data\Cache\DataCache implements \Discussify\Data\CacheStructure {
     /**
      * Singleton instance of this class.
      * @var object
@@ -54,7 +54,7 @@ class DbCache extends \Discussify\Data\DataCache implements \Discussify\Data\Cac
      * @param string $table - Table to get sorting for.
      * @return string - sorting string.
      */
-    private function sorting($table) {
+    private static function sorting($table) {
         $sorting = null;
 
         foreach (self::$sorting as $k => $v) {
@@ -153,7 +153,7 @@ class DbCache extends \Discussify\Data\DataCache implements \Discussify\Data\Cac
      * @return object - JSON object of data.
      */
     public static function getData($table) {
-        return (\count(self::$cache[$table] !== null ? self::$cache[$table] : []) > 0) ? self::$cache[$table] : [];
+        return (isset(self::$cache[$table]) && \is_array(self::$cache[$table]) && \count(self::$cache[$table]) > 0) ? self::$cache[$table] : [];
     }
 
     /**
