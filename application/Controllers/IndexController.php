@@ -43,7 +43,7 @@ class IndexController extends \Discussify\Controllers\BaseController {
     /**
      * Index page of the application.
      */
-    public static function index() {
+    public function index() {
         self::set(self::$model->appIndex());
         self::output('index', 'index');
     }

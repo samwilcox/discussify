@@ -12,6 +12,10 @@
  * https://license.discussify.com
  */
 
+// error_reporting(E_ALL);
+// ini_set('display_errors', true);
+error_reporting(0);
+
 define('ROOT_PATH', dirname(__FILE__) . '/');
 
 require_once (ROOT_PATH . 'application/Discussify.php');

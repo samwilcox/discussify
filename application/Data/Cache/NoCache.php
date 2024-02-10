@@ -92,9 +92,9 @@ class NoCache extends \Discussify\Data\Cache\DataCache implements \Discussify\Da
 
             self::db()->freeResult($sql);
 
-            $toCache = \json_encode($record ?? '');
+            $toCache = \json_encode($records ?? '');
 
-            self::$cache[$table] = \json_encode($toCache);
+            self::$cache[$table] = \json_decode($toCache);
         }
     }
 
@@ -111,9 +111,9 @@ class NoCache extends \Discussify\Data\Cache\DataCache implements \Discussify\Da
 
         self::db()->freeResult($sql);
 
-        $toCache = \json_encode($record ?? '');
+        $toCache = \json_encode($records ?? '');
 
-        self::$cache[$table] = \json_encode($toCache);
+        self::$cache[$table] = \json_decode($toCache);
     }
 
     /**

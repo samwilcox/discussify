@@ -57,23 +57,23 @@ class Settings extends \Discussify\Application {
         foreach ($data as $setting) {
             switch ($setting->value_type) {
                 case 'bool':
-                    self::$settings[$setting->key] = (\strtolower($setting->value) == 'true') ? true : false;
+                    self::$settings[$setting->name] = (\strtolower($setting->value) == 'true') ? true : false;
                     break;
 
                 case 'int':
-                    self::$settings[$setting->key] = (int)$setting->value;
+                    self::$settings[$setting->name] = (int)$setting->value;
                     break;
 
                 case 'json':
-                    self::$settings[$setting->key] = \strlen($setting->value) > 0 ? \json_decode($setting->value) : '';
+                    self::$settings[$setting->name] = \strlen($setting->value) > 0 ? \json_decode($setting->value) : '';
                     break;
 
                 case 'serialized':
-                    self::$settings[$setting->key] = \strlen($setting->value) > 0 ? \unserialize($setting->value) : '';
+                    self::$settings[$setting->name] = \strlen($setting->value) > 0 ? \unserialize($setting->value) : '';
                     break;
 
                 default:
-                    self::$settings[$setting->key] = $setting->value;
+                    self::$settings[$setting->name] = $setting->value;
                     break;
             }
         }

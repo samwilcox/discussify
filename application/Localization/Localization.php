@@ -63,7 +63,7 @@ class Localization extends \Discussify\Application {
         $data = self::cache()->getData('localization');
 
         foreach ($data as $local) {
-            if ($local->package_id === self::user()->languagepack_id()) {
+            if ($local->package_id === self::user()->languagepackId()) {
                 self::$localization[$local->category][$local->string_id] = $local->string_data;
             }
         }

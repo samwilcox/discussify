@@ -50,7 +50,7 @@ class Theme extends \Discussify\Application {
      */
     public static function get($options = null) {
         if ($options === null) return;
-
+        
         if (isset($options['controller'])) {
             if (isset($options['action']) && isset($options['partial'])) {
                 return self::getTheme([
@@ -102,9 +102,9 @@ class Theme extends \Discussify\Application {
 
             case 'base':
                 if (self::settings()->theme_storage_method == 'db') {
-                    return self::getFromDatabase($options['base']);
+                    return self::getFromDatabase(null, null, null, $options['base']);
                 } else {
-                    return self::getFromCache($options['base']);
+                    return self::getFromCache(null, null, null, $options['base']);
                 }
                 break;
 
@@ -124,17 +124,17 @@ class Theme extends \Discussify\Application {
      */
     private static function getFromDatabase($controller = null, $action = null, $partial = null, $base = null) {
         if ($controller === null && $action === null && $partial === null && $base === null) return;
-
+        
         $data = self::cache()->getData('theme_html');
         $source = '';
-
+        
         foreach ($data as $html) {
-            if ($html->theme_id == self::user()->themeId()) {
+            if ($html->theme_id === self::user()->themeId()) {
                 if ($controller !== null) {
                     if ($action !== null && $partial !== null) {
                         $source = $html->html_source;
-                    } else {
-                        $source =$html->html_source;
+                    } elseif ($action !== null && $partial === null) {
+                        $source = $html->html_source;
                     }
                 } else {
                     if ($base !== null) {

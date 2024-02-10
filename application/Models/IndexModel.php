@@ -40,7 +40,7 @@ class IndexModel extends \Discussify\Models\BaseModel {
      * 
      * @return $vars
      */
-    public static function appIndex() {
+    public function appIndex() {
         return self::$vars;
     }
 }

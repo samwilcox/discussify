@@ -49,11 +49,27 @@ class DataCache extends \Discussify\Application {
      */
     public function __construct() {
         self::$tables = [
-
+            'application_settings',
+            'installed_languagepacks',
+            'installed_themes',
+            'localization',
+            'registry',
+            'sessions',
+            'theme_css',
+            'theme_html',
+            'users'
         ];
 
         self::$sorting = [
-
+            'application_settings' => ' ORDER BY id ASC',
+            'installed_languagepacks' => ' ORDER BY id ASC',
+            'installed_themes' => ' ORDER BY id ASC',
+            'localization' => ' ORDER BY id ASC',
+            'registry' => ' ORDER BY id ASC',
+            'sessions' => ' ORDER BY id ASC',
+            'theme_css' => ' ORDER BY id ASC',
+            'theme_html' => ' ORDER BY id ASC',
+            'users' => ' ORDER BY id ASC',
         ];
     }
 

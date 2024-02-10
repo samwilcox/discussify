@@ -338,4 +338,13 @@ class User extends \Discussify\Application {
     public static function id() {
         return self::$user->id;
     }
+
+    /**
+     * Returns the language pack ID.
+     * 
+     * @return int - Language pack ID.
+     */
+    public static function languagepackId() {
+        return self::$user->languagepackId;
+    }
  }
