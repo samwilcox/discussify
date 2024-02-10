@@ -1,2 +1,3 @@
 # discussify
-Bulletin board system  (PHP backend, React frontend)
+Bulletin board system written in PHP.
+Plan to have option for multiple databases - MySQL, MSSQL, PostgreSQL, SQLite, etc.
