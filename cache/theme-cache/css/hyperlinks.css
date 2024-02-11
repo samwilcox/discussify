@@ -1,0 +1,18 @@
+.side-bar-toggle a, .side-bar-toggle a:link, .side-bar-toggle a:active, .side-bar-toggle a:visited { color: #000; text-decoration: none; transition: 0.4s; border-top-right-radius: 5px; border-bottom-right-radius: 5px; background-color: #AEC8DC; padding-right: 8px; padding-left: 5px; padding-top: 4px; padding-bottom: 4px; position: absolute; left:60px; top: 65px; z-index: 6; opacity: 0.5; }
+.side-bar-toggle a:hover { color: #000; text-decoration: none; transition: 0.4s; opacity: 1; }
+.side-bar-menu-full a, .side-bar-menu-full a:link, .side-bar-menu-full a:active, .side-bar-menu-full a:visited { color: #202020; text-decoration: none; transition: 0.4s; border-radius: 5px; padding: 8px; font-size: 16px; display: block; }
+.side-bar-menu-full a:hover { color: #000; text-decoration: none; transition: 0.4s; background-color: #AFCBE1; }
+.side-bar-menu-min a, .side-bar-menu-min a:link, .side-bar-menu-min a:active, .side-bar-menu-min a:visited { color: #202020; text-decoration: none; transition: 0.4s; border-radius: 5px; padding: 8px; display: block; font-size: 16px; }
+.side-bar-menu-min a:hover { color: #000; text-decoration: none; transition: 0.4s; background-color: #AFCBE1; }
+.side-bar-menu-bottom a, .side-bar-menu-bottom a:link, .side-bar-menu-bottom a:active, .side-bar-menu-bottom a:visited { color: #202020; text-decoration: none; transition: 0.4s; border-radius: 5px; padding: 8px; font-size: 16px; display: block; box-sizing: border-box; width: 90%; }
+.side-bar-menu-bottom a:hover { color: #000 !important; text-decoration: none; transition: 0.4s; background-color: #AFCBE1; }
+.side-bar-menu-bottom-min a, .side-bar-menu-bottom-min a:link, .side-bar-menu-bottom-min a:active, .side-bar-menu-bottom-min a:visited { color: #202020; text-decoration: none; transition: 0.4s; border-radius: 5px; padding: 8px; font-size: 16px; display: inline-block; box-sizing: border-box; }
+.side-bar-menu-bottom-min a:hover { color: #000 !important; text-decoration: none; transition: 0.4s; background-color: #AFCBE1; }
+.powered-by a, .powered-by a:link, .powered-by a:active, .powered-by a:visited { color: #FFF; text-decoration: none; }
+.powered-by a:hover { color: #FFF; text-decoration: underline; }
+.breadcrumbs-bar a, .breadcrumbs-bar a:link, .breadcrumbs-bar a:active, .breadcrumbs-bar a:visited { color: #202020; text-decoration: none; transition: 0.4s; font-size: 12px; }
+.breadcrumbs-bar a:hover { color: #005b96; text-decoration: none; transition: 0.4s; font-size: 12px; }
+.signin-button a, .signin-button a:link, .signin-button a:active, .signin-button a:visited { color: #000; text-decoration: none; transition: 0.4s; border-radius: 5px; padding-left: 20px; padding-right: 20px; font-weight: 500; padding-top: 8px; padding-bottom: 8px; background-color: #b3cde0; border: 2px solid #b3cde0; }
+.signin-button a:hover { color: #FFF; text-decoration: none; transition: 0.4s; background-color: #03396c; }
+.register-button a, .register-button a:link, .register-button a:active, .register-button a:visited { color: #FFF; text-decoration: none; transition: 0.4s; padding-top: 8px; padding-bottom: 8px; border-radius: 5px; padding-left: 20px; padding-right: 20px; margin-left: 10px; border: 2px solid #FFF; background-color: #03396c; }
+.register-button a:hover { color: #FFF; text-decoration: none; transition: 0.4s; background-color: #000; }

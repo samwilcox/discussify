@@ -58,10 +58,12 @@ class Theme extends \Discussify\Application {
                     'opts' => $options
                 ]); 
             } else {
-                return self::getTheme([
+                $test = self::getTheme([
                     'theme' => 'two',
                     'opts' => $options
                 ]); 
+
+                var_dump($test); exit;
             }
         } else {
             if (isset($options['base']) && \strlen($options['base']) > 0) {
@@ -86,25 +88,25 @@ class Theme extends \Discussify\Application {
         switch ($options['theme']) {
             case 'all':
                 if (self::settings()->theme_storage_method == 'db') {
-                    return self::getFromDatabase($options['controller'], $options['action'], $options['partial']);
+                    return self::getFromDatabase($options['opts']['controller'], $options['opts']['action'], $options['opts']['partial']);
                 } else {
-                    return self::getFromCache($options['controller'], $options['action'], $options['partial']);
+                    return self::getFromCache($options['opts']['controller'], $options['opts']['action'], $options['opts']['partial']);
                 }
                 break;
 
             case 'two':
                 if (self::settings()->theme_storage_method == 'db') {
-                    return self::getFromDatabase($options['controller'], $options['action']);
+                    return self::getFromDatabase($options['opts']['controller'], $options['opts']['action']);
                 } else {
-                    return self::getFromCache($options['controller'], $options['action']);
+                    return self::getFromCache($options['opts']['controller'], $options['opts']['action']);
                 }
                 break;
 
             case 'base':
                 if (self::settings()->theme_storage_method == 'db') {
-                    return self::getFromDatabase(null, null, null, $options['base']);
+                    return self::getFromDatabase(null, null, null, $options['opts']['base']);
                 } else {
-                    return self::getFromCache(null, null, null, $options['base']);
+                    return self::getFromCache(null, null, null, $options['opts']['base']);
                 }
                 break;
 
