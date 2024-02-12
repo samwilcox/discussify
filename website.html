@@ -7,27 +7,53 @@
     <title>Discussify - Development Forums</title>
     <link rel="stylesheet" href="./public/fontawesome/css/all.min.css">
     <link rel="stylesheet" href="./cache/theme-cache/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./cache/theme-cache/css/common.css?time=15">
-    <link rel="stylesheet" href="./cache/theme-cache/css/hyperlinks.css?time=4">
-    <link rel="stylesheet" href="./cache/theme-cache/css/forms.css">
+    <link rel="stylesheet" href="./cache/theme-cache/css/common.css?time=18">
+    <link rel="stylesheet" href="./cache/theme-cache/css/hyperlinks.css?time=7">
+    <link rel="stylesheet" href="./cache/theme-cache/css/forms.css?t=2">
     <script src="./public/js/vendor/jquery.min.js"></script>
     <script src="./public/js/vendor/jquery-ui.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
     <script src="./public/js/vendor/bootstrap.bundle.min.js"></script>
-    <script src="./public/js/common.js?time=2"></script>
+    <script src="./public/js/common.js?time=76"></script>
     <script type="application/json" id="app-json">
         {
- 
+            "search_opt_selected_class":"search-option-selected"
         }
     </script>
 </head>
 <body>
-    <span class="side-bar-toggle"><a href="javascript:void(0)" id="toggle-link" data-toggle="tooltip" data-placement="right" title="Toggle side bar" data-side-bar-classes="side-bar,side-bar-collapsed" data-collapse="fa-angles-right" data-expand="fa-angles-left" data-side-bar="side-bar" data-full="side-bar-menu-full" data-icon="toggle-icon" data-link="toggle-link" data-condensed="side-bar-menu-min" data-bottom-links-full="side-bar-bottom-full" data-bottom-links-min="side-bar-bottom-min" onclick="toggleSideBar(this);"><i class="fa-solid fa-angles-right" id="toggle-icon"></i></a></span>
+    <div class="background-disabler" id="background-disabler"></div>
+    <div class="drop-down-menu" id="dropdown-index-search">
+        <span class="drop-down-menu-items">
+            <span id="so-anything" class="search-option-selected"><a href="javascript:void(0);" id="search-options-anything" data-text="search-options-text" data-selected="Anything" data-checkbox="fa-solid fa-square-check" onclick="searchOptionSelect(this);"><span class="checkboxDD" id="so-icon-anything"><i class="fa-solid fa-square-check"></i>  </span>Anything</a></span>
+            <span id="so-topics"><a href="javascript:void(0);" id="search-options-topics" data-text="search-options-text" data-selected="Topics" data-checkbox="fa-solid fa-square-check" onclick="searchOptionSelect(this);"><span class="checkboxDD" id="so-icon-topics"></span>Topics</a></span>
+            <span id="so-members"><a href="javascript:void(0);" id="search-options-members" data-text="search-options-text" data-selected="Members" data-checkbox="fa-solid fa-square-check" onclick="searchOptionSelect(this);"><span class="checkboxDD" id="so-icon-members"></span>Members</a></span>
+            <span id="so-tags"><a href="javascript:void(0);" id="search-options-tags" data-text="search-options-text" data-selected="Tags" data-checkbox="fa-solid fa-square-check" onclick="searchOptionSelect(this);"><span class="checkboxDD" id="so-icon-tags"></span>Tags</a></span>
+        </span>
+    </div>
+    <div class="drop-down-menu" id="dropdown-topic-filter">
+        <span class="drop-down-menu-items">
+            <a href="javascript:void(0)">Latest</a>
+            <a href="javascript:void(0)">Newest</a>
+            <a href="javascript:void(0)">Oldest</a>
+            <a href="javascript:void(0)">Latest</a>
+            <a href="javascript:void(0)">Trending</a>
+        </span>
+    </div>
+    <span class="side-bar-toggle"><a href="javascript:void(0)" id="toggle-link" data-side-bar-classes="side-bar,side-bar-collapsed" data-collapse="fa-angles-right" data-expand="fa-angles-left" data-side-bar="side-bar" data-full="side-bar-menu-full" data-icon="toggle-icon" data-link="toggle-link" data-condensed="side-bar-menu-min" data-bottom-links-full="side-bar-bottom-full" data-bottom-links-min="side-bar-bottom-min" onclick="toggleSideBar(this);"><i class="fa-solid fa-angles-right" id="toggle-icon"></i></a></span>
     <header id="header">
         <div class="table">
             <div class="table-row">
                 <div class="header-left-cell"><img src="./public/imagesets/default/images/logo.png?time=1"></div>
-                <div class="header-center-cell">Center</div>
+                <div class="header-center-cell">
+                    <form name="index-search" method="post" action="" enctype="multipart/form-data" id="dropdown-index-search-form">
+                        <div class="index-search-div" id="dropdown-index-search-div">
+                            <input type="search" name="query" placeholder="Search..." class="index-search-box" id="index-search-box-input" data-options="dropdown-index-search-span" onmouseover="showSearchOptions(this);">
+                            <span class="index-search-button"><a href="javascript:void(0)"><i class="fa-solid fa-magnifying-glass"></i></a></span>
+                            <span class="index-search-select" id="dropdown-index-search-span" style="display: none;"><a href="javascript:void(0)" id="dropdown-index-search-link" data-menu="dropdown-index-search" data-link="dropdown-index-search-link" data-ignored="dropdown-index-search-icon,search-options-text" onclick="openDropDownMenu(this);"><span id="search-options-text">Anything</span> <i class="fa-solid fa-caret-down" id="dropdown-index-search-icon"></i></a></span>
+                        </div>
+                    </form>
+                </div>
                 <div class="header-right-cell">
                     <span class="signin-button"><a href="#"><i class="fa-solid fa-user"></i> Sign In</a></span>
                     <span class="register-button"><a href="#"><i class="fa-solid fa-pen-to-square"></i> Register</a></span>
@@ -71,10 +97,62 @@
     </div>
     <div class="content-body">
         <div class="breadcrumbs-bar"><i class="fa-solid fa-house-chimney"></i> <a href="#">Home</a><span class="breadcrumbs-seperator">/</span><span class="breadcrumbs-selected">Forums</span></div>
-        Here
+        <div class="app-layout-grid">
+            <div class="app-layout-grid-left">
+                <span class="forum-sidebar-item-selected"><a href="#"><span class="forum-sidebar-item-icon" style="color: green;"><i class="fa-regular fa-comments"></i></span>All Discussions</a></span>
+                <span class="forum-sidebar-item"><a href="#"><span class="forum-sidebar-item-icon" style="color: blue;"><i class="fa-solid fa-asterisk"></i></span>Main Discussion</a></span>
+            </div>
+            <div class="content">
+                <div class="post-item-filter">
+                    <span class="button-light"><a href="javascript:void(0);" id="dropdown-topic-filter-link" data-menu="dropdown-topic-filter" data-link="dropdown-topic-filter-link" data-ignored="dropdown-topic-filter-icon" data-movement="14" onclick="openDropDownMenu(this);">Latest <i class="fa-solid fa-caret-down" id="dropdown-topic-filter-icon"></i></a></span>
+                </div>
+                <div class="post-item">
+                    <div class="post-item-grid">
+                        <div>
+                            <div class="photo-thumbnail"><img src="./uploads/profile-photos/1/photo.jpg"></div>
+                        </div>
+                        <div>
+                            <div class="post-item-row-grid">
+                                <div class="post-item-row-grid-title">Topic Name Here</div>
+                                <div class="post-item-row-grid-reply">
+                                    <span class="post-item-row-grid-reply-item" data-toggle="tooltip" data-placement="top"  title="Sam Wilcox started this topic">
+                                        <strong><i class="fa-solid fa-pencil"></i> Sam Wilcox</strong>
+                                    </span>
+                                    <span class="post-item-row-grid-reply-item">
+                                        <strong><i class="fa-solid fa-reply"></i> Last Reply:</strong> Date and Time by <strong>darkdayze</strong>
+                                    </span>
+                                </div>
+                                <div class="post-item-row-grid-info">This is some example content that would usually be in the reply of the topic. Who knows what it really could be. Of course we can only allow so many characters here...</div>
+                            </div>
+                        </div>
+                        <div class="post-item-grid-info">
+                            <div class="post-item-grid-info-grid">
+                                <div>
+                                    <span class="post-item-grid-info-item">
+                                        <span class="forum-bubble" style="background-color: orange;"><i class="fa-regular fa-comments"></i>Main Discussion</span>
+                                    </span>
+                                    <span class="post-item-grid-info-item"data-toggle="tooltip" data-placement="top" title="This topic has 1.2K posts">
+                                        1.2K <i class="fa-regular fa-comment"></i>
+                                    </span>
+                                </div>
+                                <div class="floatRight">
+                                    <span class="post-item-grid-info-item"data-toggle="tooltip" data-placement="top" title="This topic has 2.3M views">
+                                        2.3M <i class="fa-solid fa-eye"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-item-load-more">
+                    <span class="button-light"><a href="javascript:void(0)">Load More</a></span>
+                </div>
+            </div>
+        </div>
     </div>
     <!-- PLEASE DO NOT REMOVE THIS TAG BELOW -->
     <div class="powered-by" id="powered-by-box">
+        All times are <strong>America/Boise</strong><br><br>
         Powered by <strong><a href="https://www.discussify.com" target="_blank">Discussify</a></strong> v0.1.0
     </div>
     <!-- END OF TAG TO NOT REMOVE -->

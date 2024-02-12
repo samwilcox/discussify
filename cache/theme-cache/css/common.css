@@ -2,7 +2,7 @@ body { font-family: inherit; font-size: 14px; padding: 0px; margin: 0px; backgro
 header { position: fixed; z-index: 10; padding-left: 20px; padding-right: 20px; padding-top: 12px; padding-bottom: 12px; background-color: #03396c; color: #FFFFFF !important; border-bottom: 5px solid #005b96; top: 0; left: 0; right: 0; }
 .side-bar { position: fixed; z-index: 5; top: 0; left: 0; bottom: 0; background-color: #D8E3EC; border-right: 5px solid #AEC8DC; width: 60px; padding-top: 65px; padding-left: 12px; padding-right: 12px; padding-bottom: 12px; transition: all 0.4s ease; }
 .side-bar-collapsed { position: fixed; z-index: 5; top: 0; left: 0; bottom: 0; background-color: #D8E3EC; border-right: 5px solid #AEC8DC; width: 60px; padding-top: 65px; padding-left: 12px; padding-right: 12px; padding-bottom: 12px;  transition: all 0.4s ease; }
-.content-body { width: auto; width: 50%; margin-left: 300px; margin-top: 60px; margin-left: auto; margin-right: auto; }
+.content-body { width: auto; width: 45%; margin-left: 300px; margin-top: 60px; margin-left: auto; margin-right: auto; }
 .table { display: table; box-sizing: border-box; width: 100%; border-collapse: separate; border-spacing: 0px; margin: 0px; padding: 0px; }
 .table-row { display: table-row; }
 .generic-left-cell { display: table-cell; vertical-align: middle; }
@@ -20,3 +20,30 @@ header { position: fixed; z-index: 10; padding-left: 20px; padding-right: 20px; 
 .breadcrumbs-end { display: inline-block; margin-left: 10px; }
 .breadcrumbs-seperator { display: inline-block; margin-left: 10px; margin-right: 10px; }
 .breadcrumbs-selected { color: #8080FF; }
+.index-search-dd-menu { position: absolute; top: 100%; left: 0; z-index: 1000; }
+.background-disabler { width: 100%; height: 100%; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.7); z-index: 50; display: none; }
+.drop-down-menu {  width: fit-content; position: absolute; top: 0; left: 0; z-index: 25; border-radius: 5px; background-color: #202020; color: #FFF; padding-top: 5px; padding-bottom: 5px; box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5); display: none; }
+.drop-down-seperator { position: relative; width: 100%; height: 12px; background-color: #202020; display: block; }
+.drop-down-seperator::after { content: ''; position: absolute; top: 50%; left: 0; width: 100%; border-bottom: 1px solid #808080; transform: translateY(-50%); }
+.app-layout-grid { display: grid; grid-template-columns: 300px 1fr; grid-gap: 20px; }
+.app-layout-grid-left {}
+.content { padding: 10px;}
+.forum-sidebar-item-icon { width: 28px; display: inline-block; }
+.post-item { border-radius: 5px; padding: 12px; background-color: #FFF; width: auto; }
+.post-item:hover { background-color: #F3F8FD; cursor: pointer; }
+.post-item-grid { display: grid; grid-template-columns: 60px 1fr 200px; grid-gap: 8px; }
+.photo-thumbnail { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+.photo-thumbnail img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.post-item-row-grid { display: grid; grid-template-rows: auto-fill; gap: 0px; }
+.post-item-row-grid-title { font-weight: 600; font-size: 16px; }
+.post-item-row-grid-reply { color: #AAAAAA; font-size: 11px; }
+.post-item-row-grid-info { color: #AAAAAA; font-size: 11px; padding-top: 3px; }
+.post-item-row-grid-reply-item { margin-right: 20px; display: inline-block; }
+.forum-bubble { border-radius: 2px; font-size: 10px; font-weight: bold; color: #FFF; padding: 4px; }
+.forum-bubble i { margin-right: 3px; }
+.post-item-grid-info { margin-left: auto; margin-right: 0px; vertical-align: top; }
+.post-item-grid-info-item { display: inline-block; margin-left: 16px; color: #AAAAAA; }
+.post-item-grid-info-grid { display: grid; grid-template-rows: auto-fill; gap: 0px; margin-left: auto; margin-right: 0; }
+.floatRight { margin-left: auto; margin-right: 0; }
+.post-item-filter { display: block; margin-bottom: 30px; }
+.post-item-load-more { width: auto; margin-top: 30px; text-align: center; }

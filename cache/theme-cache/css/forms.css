@@ -1,0 +1,8 @@
+form { padding: 0px; margin: 0px; }
+input, select, textarea { font-size: 15px; padding-left: 14px; padding-right: 14px; padding-top: 8px; padding-bottom: 8px; background-color: #E0E9F2; border-radius: 5px; outline: 0px; border: 1px solid #000; }
+input:hover, select:hover, textarea:hover { outline: 2px solid #03396C; border: 1px solid #03396C; }
+input:focus, select:focus, textarea:focus { outline: 2px solid #03396C; border: 1px solid #03396C; background-color: #FFF; }
+.index-search-div { position: relative; display: inline-block; width: fit-content; margin-left: auto; margin-right: auto; }
+.index-search-box { font-size: 13px; padding-top: 4px; padding-bottom: 4px; width: 450px; background-color: #FFF; outline: 0px; padding-right: 120px; }
+.index-search-box:hover, .index-search-box:focus { outline: 0px; }
+.checkboxDD { width: 20px; display: inline-block; }
