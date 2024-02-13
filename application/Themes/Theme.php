@@ -43,155 +43,43 @@ class Theme extends \Discussify\Application {
     }
 
     /**
-     * Returns the source for the given theme.
+     * Returns the theme base HTML source.
      * 
-     * @param array $options - Options for returning the theme.
-     * @return string - Resulting theme source.
+     * @return mixed - Base source.
      */
-    public static function get($options = null) {
-        if ($options === null) return;
-        
-        if (isset($options['controller'])) {
-            if (isset($options['action']) && isset($options['partial'])) {
-                return self::getTheme([
-                    'theme' => 'all',
-                    'opts' => $options
-                ]); 
-            } else {
-                $test = self::getTheme([
-                    'theme' => 'two',
-                    'opts' => $options
-                ]); 
-
-                var_dump($test); exit;
-            }
-        } else {
-            if (isset($options['base']) && \strlen($options['base']) > 0) {
-                return self::getTheme([
-                    'theme' => 'base',
-                    'opts' => $options
-                ]); 
-            } else {
-                return;
-            }
-        }
+    public static function getThemeBase() {
+        return self::file()->readFile(self::user()->themePath() . 'html/Base.html');
     }
 
     /**
-     * Finds the correct location of the source and then returns it.
+     * Returns the theme print HTML source.
      * 
-     * @param array $options - Options for returning the theme.
+     * @return mixed - Print source.
      */
-    private static function getTheme($options = null) {
-        if ($options === null) return;
-
-        switch ($options['theme']) {
-            case 'all':
-                if (self::settings()->theme_storage_method == 'db') {
-                    return self::getFromDatabase($options['opts']['controller'], $options['opts']['action'], $options['opts']['partial']);
-                } else {
-                    return self::getFromCache($options['opts']['controller'], $options['opts']['action'], $options['opts']['partial']);
-                }
-                break;
-
-            case 'two':
-                if (self::settings()->theme_storage_method == 'db') {
-                    return self::getFromDatabase($options['opts']['controller'], $options['opts']['action']);
-                } else {
-                    return self::getFromCache($options['opts']['controller'], $options['opts']['action']);
-                }
-                break;
-
-            case 'base':
-                if (self::settings()->theme_storage_method == 'db') {
-                    return self::getFromDatabase(null, null, null, $options['opts']['base']);
-                } else {
-                    return self::getFromCache(null, null, null, $options['opts']['base']);
-                }
-                break;
-
-            default:
-                return;
-        }
+    public static function getThemePrint() {
+        return self::file()->readFile(self::user()->themePath() . 'html/PrintBase.html');
     }
 
     /**
-     * Retrieves the source for the given theme from the database.
+     * Returns the correct theme for the specified controller and action.
      * 
-     * @param string $controller - The name of the controller.
-     * @param string $action - The action name.
-     * @param string $partial - The name of the partial.
-     * @param string $base - The name of the base (if its a base).
+     * @param string $controller - Name of the controller.
+     * @param string $action - Name of the action
      * @return mixed - Theme source.
      */
-    private static function getFromDatabase($controller = null, $action = null, $partial = null, $base = null) {
-        if ($controller === null && $action === null && $partial === null && $base === null) return;
-        
-        $data = self::cache()->getData('theme_html');
-        $source = '';
-        
-        foreach ($data as $html) {
-            if ($html->theme_id === self::user()->themeId()) {
-                if ($controller !== null) {
-                    if ($action !== null && $partial !== null) {
-                        $source = $html->html_source;
-                    } elseif ($action !== null && $partial === null) {
-                        $source = $html->html_source;
-                    }
-                } else {
-                    if ($base !== null) {
-                        $source = $html->html_source;
-                    } else {
-                        return;
-                    }
-                }
-            }
-        }
-
-        return $source;
+    public static function getTheme($controller, $action) {
+        return self::file()->readFile(self::user()->themePath() . 'html/' . $controller . '/' . $controller . '-' . $action . '.html');
     }
 
     /**
-     * Retrieves the source for the given theme from cache files.
+     * Returns the correct theme for the specified controller, action, ans partial.
      * 
-     * @param string $controller - The name of the controller.
-     * @param string $action - The action name.
-     * @param string $partial - The name of the partial.
-     * @param string $base - The name of the base (if its a base).
+     * @param string $controller - Name of the controller.
+     * @param string $action - Name of the action
+     * @param string $partial - Name of the partial.
      * @return mixed - Theme source.
      */
-    private static function getFromCache($controller = null, $action = null, $partial = null, $base = null) {
-        $cacheDir = ROOT_PATH . 'cache/' . CACHE_THEMES_DIR . '/theme-' . self::user()->themeId() . '/';
-        $source = '';
-
-        if ($controller !== null) {
-            if ($action !== null && $partial !== null) {
-                if (file_exists(\sprintf('%s%s-%s-%s.html', $cacheDir, $controller, $action, $base))) {
-                    $source = self::file()->readFile(\sprintf('%s%s-%s-%s.html', $cacheDir, $controller, $action, $base));
-                } else {
-                    return;
-                }
-            } else {
-                if (file_exists(\sprintf('%s%s-%s.html', $cacheDir, $controller, $action))) {
-                    $source = self::file()->readFile(\sprintf('%s%s-%s.html', $cacheDir, $controller, $action));
-                } else {
-                    return;
-                }
-            }
-        } else {
-            if ($base !== null) {
-                if (\strtolower($base) == 'main') {
-                    $source = self::file()->readFile(\sprintf('%sBase.html', $cacheDir));
-                } elseif (\strtolower($base) == 'print') {
-                    $source = self::file()->readFile(\sprintf('%sPrintBase.html', $cacheDir));
-                } else {
-                    return;
-                }
-            } else {
-                return;
-            }
-        }
-
-        return $source;
+    public static function getThemePartial($controller, $action, $partial) {
+        return self::file()->readFile(self::user()->themePath() . 'html/' . $controller . '/' . $controller . '-' . $action . '-' . $partial . '.html');
     }
 }

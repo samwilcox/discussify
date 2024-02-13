@@ -129,7 +129,7 @@ class Output extends \Discussify\Application {
 
         \header('HTTP/1.0 ' . $httpStatusCode . ' ' . self::$httpStatusLegend[$httpStatusCode]);
         \header('Access-Control-Allow-Origin: *');
-        \header('X-DOTBB-SignIn: ' . self::user()->id());
+        \header('X-Discussify-SignIn: ' . self::user()->id());
 
         if (self::settings()->gzip_compression_enabled) {
             if (\substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) {
@@ -148,6 +148,7 @@ class Output extends \Discussify\Application {
             \header('Cache-Control: no-store, no-cache, must-revalidate');
             \header('Cache-Control: post-check=0, pre-check=0', false);
             \header('Pragma: no-cache');
+            \header('Expires: 0');
         }
 
         print $output;
@@ -174,15 +175,8 @@ class Output extends \Discussify\Application {
      * @param array $vars - Optional key value pairs collection.
      */
     public static function render($controller, $action, $vars = []) {
-        $base = self::theme()->get([
-            'base' => 'main'
-        ]);
-
-        $output = self::theme()->get([
-            'controller' => $controller,
-            'action' => $action
-        ]);
-
+        $base = self::theme()->getThemeBase();
+        $output = self::theme()->getTheme($controller, $action);
         $base = \str_replace('${body}', $output, $base);
         $globals = self::globals()->get();
 
@@ -200,16 +194,8 @@ class Output extends \Discussify\Application {
      * @param array $vars - Optional key value pairs collection.
      */
     public static function renderAlt($controller, $action, $partial, $vars = []) {
-        $base = self::theme()->get([
-            'base' => 'main'
-        ]);
-
-        $output = self::theme()->get([
-            'controller' => $controller,
-            'action' => $action,
-            'partial' => $partial
-        ]);
-
+        $base = self::theme()->getThemeBase();
+        $output = self::theme()->getThemePartial($controller, $action, $partial);
         $base = \str_replace('${body}', $output, $base);
         $globals = self::globals()->get();
 
@@ -224,16 +210,8 @@ class Output extends \Discussify\Application {
      * @param array $vars - Optional key value pairs collection.
      */
     public static function renderError($vars = []) {
-        $base = self::theme()->get([
-            'base' => 'main'
-        ]);
-
-        $output = self::theme()->get([
-            'controller' => 'error',
-            'action' => 'error',
-            'partial' => 'message'
-        ]);
-
+        $base = self::theme()->getThemeBase();
+        $output = self::theme()->getThemePartial('Error', 'Error', 'Message');
         $base = \str_replace('${body}', $output, $base);
         $globals = self::globals()->get();
 
@@ -251,12 +229,7 @@ class Output extends \Discussify\Application {
      * @param array $vars - Optional key value pairs collection.
      */
     public static function renderPartial($controller, $action, $partial, $vars = []) {
-        $output = self::theme()->get([
-            'controller' => $controller,
-            'action' => $action,
-            'partial' => $partial
-        ]);
-
+        $output = self::theme()->getThemePartial($controller, $action, $partial);
         $globals = self::globals()->get();
 
         if (\count($globals) > 0) $vars = \array_merge($vars, $globals);
@@ -273,16 +246,8 @@ class Output extends \Discussify\Application {
      * @param array $vars - Optional key value pair collection.
      */
     public static function renderPrint($controller, $action, $partial, $vars = []) {
-        $base = self::theme()->get([
-            'base' => 'print'
-        ]);
-
-        $output = self::theme()->get([
-            'controller' => $controller,
-            'action' => $action,
-            'partial' => $partial
-        ]);
-
+        $base = self::theme()->getThemePrint();
+        $output = self::theme()->getThemePartial($controller, $action, $partial);
         $base = \str_replace('${body}', $output, $base);
         $globals = self::globals()->get();
 
@@ -298,7 +263,7 @@ class Output extends \Discussify\Application {
      * @param string $contentType - The source content type string.
      */
     public static function renderSource($source, $contentType) {
-        self::output($base, [], $contentType);
+        self::output($source, [], $contentType);
     }
 
     /**
@@ -311,11 +276,7 @@ class Output extends \Discussify\Application {
      * @return mixed - Partial theme source.
      */
     public static function getPartial($controller, $action, $partial, $vars = []) {
-        $output = self::theme()->get([
-            'controller' => $controller,
-            'action' => $action,
-            'partial' => $partial
-        ]);
+        $output = self::theme()->getThemePartial($controller, $action, $partial);
 
         if (\count($vars) > 0) {
             foreach ($vars as $k => $v) {

@@ -4,7 +4,7 @@ var sideBarCheck = false;
 var currentDropDown = null;
 var triggeredElementList = null;
 var searchOptShown = false;
-var searchOptSelected = 'anything';
+var searchOptSelected = {};
 var json;
 
 /**
@@ -31,6 +31,8 @@ $(document).ready(function() {
 
     $('[data-toggle="tooltip"]').tooltip();
     parseJson();
+
+    //searchOptSelected['search-options-text'] = 'Anything';
 });
 
 /**
@@ -164,9 +166,53 @@ function searchOptionSelect(e) {
     optionText.text(selectedOption);
 
     $("#so-icon-" + searchOptSelected.toLowerCase()).html('');
-    $("#so-" + searchOptSelected.toLowerCase()).removeClass(json.search_opt_selected_class);
+    $("#so-" + searchOptSelected.toLowerCase()).removeClass(json.opt_selected_class);
     $("#so-icon-" + selectedOption.toLowerCase()).html('<i class="' + checkbox + '"></i> ');
     $("#so-" + selectedOption.toLowerCase()).addClass(json.search_opt_selected_class);
 
     searchOptSelected = $(e).data('selected');
+}
+
+/**
+ * Sets the default values for the given options.
+ * @param {object} list - List of the options to set. 
+ */
+function setAllDefaultOptions(list) {
+    for (var key in list) {
+        searchOptSelected[key] = list[key];
+    }
+}
+
+/**
+ * Selects a given option from a drop down menu.
+ * @param {object} e - Element instance. 
+ */
+function optionSelect(e) {
+    var optionText = $("#" + $(e).data('text'));
+    var selectedOption = $(e).data('selected');
+    var checkbox = $(e).data('checkbox');
+    var icon = $(e).data('icon');
+    var item = $(e).data('item');
+    var id = $(e).data('id');
+
+    optionText.text(selectedOption);
+
+    var searchOption = searchOptSelected[id];
+
+    if (typeof searchOption === 'string') {
+        var iconId = icon + searchOption.toLowerCase();
+        var itemId = item + searchOption.toLowerCase();
+        $("#" + iconId).html('');
+        $("#" + itemId).removeClass(json.opt_selected_class);
+    } else {
+        // Handle the case when searchOption is not a string
+        console.error("searchOption is not a string:", searchOption);
+    }
+
+    var selectedIconId = icon + selectedOption.toLowerCase();
+    var selectedItemID = item + selectedOption.toLowerCase();
+    $("#" + selectedIconId).html('<i class="' + checkbox + '"></i>');
+    $("#" + selectedItemID).addClass(json.opt_selected_class);
+
+    searchOptSelected[id] = $(e).data('selected');
 }

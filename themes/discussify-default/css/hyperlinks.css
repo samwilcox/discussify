@@ -22,11 +22,13 @@
 .index-search-select a:hover { color: #808080; text-decoration: none; transition: 0.4s; background-color: #D8E3EC; }
 .drop-down-menu-items a, .drop-down-menu-items a:link, .drop-down-menu-items a:active, .drop-down-menu-items a:visited { color: #FFF; text-decoration: none; transition: 0.4s; padding-left: 12px; padding-right: 12px; padding-top: 8px; padding-bottom: 8px; display: block; }
 .drop-down-menu-items a:hover { color: #FFF; text-decoration: none; transition: 0.4s; background-color: #000; }
-.search-option-selected a, .search-option-selected a:link, .search-option-selected a:active, .search-option-selected a:visited { color: #FFF; text-decoration: none; transition: 0.4s; padding-left: 12px; padding-right: 12px; padding-top: 8px; padding-bottom: 8px; display: block; background-color: #03396c; }
-.search-option-selected a:hover { color: #FFF; text-decoration: none; transition: 0.4s; background-color: #000; }
+.option-selected a, .option-selected a:link, .option-selected a:active, .search-option-selected a:visited { color: #FFF; text-decoration: none; transition: 0.4s; padding-left: 12px; padding-right: 12px; padding-top: 8px; padding-bottom: 8px; display: block; background-color: #03396c; }
+.option-selected a:hover { color: #FFF; text-decoration: none; transition: 0.4s; background-color: #000; }
 .forum-sidebar-item a, .forum-sidebar-item a:link, .forum-sidebar-item a:active, .forum-sidebar-item a:visited { color: #404040; text-decoration: none; transition: 0.4s; border-radius: 5px; padding-left: 12px; padding-right: 12px; padding-top: 6px; padding-bottom: 6px; display: block; margin-bottom: 4px;  }
 .forum-sidebar-item a:hover { color: #404040; text-decoration: none; transition: 0.4s; background-color: #9FC4E7; }
 .forum-sidebar-item-selected a, .forum-sidebar-item-selected a:link, .forum-sidebar-item-selected a:active, .forum-sidebar-item-selected a:visited { color: #000; text-decoration: none; transition: 0.4s; border-radius: 5px; padding-left: 12px; padding-right: 12px; padding-top: 6px; padding-bottom: 6px; display: block; background-color: #DAEAF8; margin-bottom: 4px;  }
 .forum-sidebar-item-selected a:hover { color: #404040; text-decoration: none; transition: 0.4s; background-color: #9FC4E7; }
 .button-light a, .button-light a:link, .button-light a:active, .button-light a:visited { color: #5C758A; text-decoration: none; transition: 0.4s; border-radius: 5px; background-color: #ECF1F6; padding-left: 20px; padding-right: 20px; padding-top: 12px; padding-bottom: 12px; }
 .button-light a:hover { color: #5C758A; text-decoration: none; transition: 0.4s; background-color: #DDEAF5; }
+.text-logo a, .text-logo a:link, .text-logo a:active,.text-logo a:visited { color: #FFF; text-decoration: none; transition: 0.4s; }
+.text-logo a:hover { color: #F5F5F5; text-decoration: none; transition: 0.4s; } 

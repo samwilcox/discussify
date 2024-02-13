@@ -1,4 +1,6 @@
-body { font-family: inherit; font-size: 14px; padding: 0px; margin: 0px; background-color: #FFFFFF; color: #000000; }
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+body { font-family: "Roboto", sans-serif; font-size: 14px; padding: 0px; margin: 0px; background-color: #FFFFFF; color: #000000; }
 header { position: fixed; z-index: 10; padding-left: 20px; padding-right: 20px; padding-top: 12px; padding-bottom: 12px; background-color: #03396c; color: #FFFFFF !important; border-bottom: 5px solid #005b96; top: 0; left: 0; right: 0; }
 .side-bar { position: fixed; z-index: 5; top: 0; left: 0; bottom: 0; background-color: #D8E3EC; border-right: 5px solid #AEC8DC; width: 60px; padding-top: 65px; padding-left: 12px; padding-right: 12px; padding-bottom: 12px; transition: all 0.4s ease; }
 .side-bar-collapsed { position: fixed; z-index: 5; top: 0; left: 0; bottom: 0; background-color: #D8E3EC; border-right: 5px solid #AEC8DC; width: 60px; padding-top: 65px; padding-left: 12px; padding-right: 12px; padding-bottom: 12px;  transition: all 0.4s ease; }
@@ -47,3 +49,4 @@ header { position: fixed; z-index: 10; padding-left: 20px; padding-right: 20px; 
 .floatRight { margin-left: auto; margin-right: 0; }
 .post-item-filter { display: block; margin-bottom: 30px; }
 .post-item-load-more { width: auto; margin-top: 30px; text-align: center; }
+.text-logo { font-size: 24px; font-weight: 600; }

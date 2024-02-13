@@ -55,6 +55,35 @@ class Globals extends \Discussify\Application {
      * @return array - Collection of global variables.
      */
     public static function get() {
+        self::$vars['communityTitle'] = self::settings()->community_title;
+        self::$vars['imagesetUrl'] = self::user()->imagesetUrl();
+        self::$vars['themeUrl'] = self::user()->themeUrl();
+        self::$vars['timestamp'] = \time();
+        self::$vars['baseUrl'] = self::vars()->baseUrl;
+        self::$vars['wrapper'] = self::vars()->wrapper;
+
+        if (self::settings()->community_logo_type === 'image') {
+            self::$vars['communityLogo'] = self::output()->getPartial(
+                'Global',
+                'Globals',
+                'LogoImage', [
+                    'communityLogo' => self::settings()->community_logo,
+                    'imagesetUrl' => self::user()->imagesetUrl(),
+                    'communityTitle' => self::settings()->community_title,
+                    'url' => self::seo()->url('index')
+                ]);
+        } else {
+            self::$vars['communityLogo'] = self::output()->getPartial(
+                'Global',
+                'Globals',
+                'LogoText',
+                [
+                    'url' => self::seo()->url('index'),
+                    'communityTitle' => self::settings()->community_title
+                ]
+            );
+        }
+
         return self::$vars;
     }
 }

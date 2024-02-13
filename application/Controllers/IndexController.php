@@ -45,6 +45,6 @@ class IndexController extends \Discussify\Controllers\BaseController {
      */
     public function index() {
         self::set(self::$model->appIndex());
-        self::output('index', 'index');
+        self::output('Index', 'Index');
     }
 }

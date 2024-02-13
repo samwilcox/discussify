@@ -94,4 +94,7 @@ class Application {
     public static function globals() { return \Discussify\Core\Globals::i(); }
     public static function sanitizer() { return \Discussify\Helpers\Sanitizer::i(); }
     public static function theme() { return \Discussify\Themes\Theme::i(); }
+    public static function type() { return \Discussify\Type\Types::i(); }
+    public static function output() { return \Discussify\Output\Output::i(); }
+    public static function seo() { return \Discussify\Url\Seo::i(); }
 }

@@ -51,12 +51,15 @@ class Seo extends \Discussify\Application {
      * @param string $action - The name of the action.
      * @param array $params - Optional key value parameters.
      * @param bool $includeCSRF - Whether to include CSRF token.
+     * @param bool $noneSeo - Whether to return just the normal hyperlink.
      * @return string - Valid SEO URL for the given parameters.
      */
-    public static function url($controller, $action = null, $params = [], $includeCSRF = false) {
+    public static function url($controller, $action = null, $params = [], $includeCSRF = false, $noneSeo = false) {
         $seo = '';
 
-        switch (self::settings()->seo_enabled) {
+        $seoEnabled = $noneSeo ? false : self::settings()->seo_enabled;
+
+        switch ($seoEnabled) {
             case true:
                 $url = \sprintf('/%s', $controller);
 
@@ -78,16 +81,16 @@ class Seo extends \Discussify\Application {
             case false:
                 $url = \sprintf('?controller=%s', $controller);
 
-                if ($action !== null) $url .= \sprintf('&amp;action=%s', $action);
+                if ($action !== null) $url .= \sprintf('&action=%s', $action);
 
                 if (isset($params) && \count($params) > 0) {
                     foreach ($params as $k => $v) {
-                        $url .= \sprintf('&amp;%s=%s', $k, $v);
+                        $url .= \sprintf('&%s=%s', $k, $v);
                     }
                 }
 
                 if ($includeCSRF && self::settings()->csrf_enabled) {
-                    $url .= \sprintf('&amp;token=%s', self::security()->getToken());
+                    $url .= \sprintf('&token=%s', self::security()->getToken());
                 }
 
                 $seo = \sprintf('%s%s', self::vars()->wrapper, $url);

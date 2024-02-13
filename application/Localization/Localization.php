@@ -221,14 +221,17 @@ class Localization extends \Discussify\Application {
         if (!$output) return;
 
         \preg_match_all('/\${\[([^]]+)\]\[([^]]+)\]}/', $output, $matches, PREG_SET_ORDER);
-        $newMatch = [];
 
-        foreach ($matches as $match) {
-            $newMatch[] = [$match[1], $match[2]];
+        for ($i = 0; $i < \count($matches); $i++) {
+            $replacementList[] = $matches[$i][0];
         }
 
-        foreach ($newMatch as $m) {
-            $output = \str_replace($m, self::getWords($m[0], $m[1]), $output);
+        $m = $matches;
+
+        foreach ($replacementList as $bit) {
+            \preg_match('/\${\[([^]]+)\]\[([^]]+)\]}/', $bit, $matches);
+
+            $output = \str_replace($bit, self::getWords($matches[1], $matches[2]), $output);
         }
     }
 
@@ -244,14 +247,15 @@ class Localization extends \Discussify\Application {
         if (!$content) return;
 
         \preg_match_all('/\${\[([^]]+)\]\[([^]]+)\]}/', $content, $matches, PREG_SET_ORDER);
-        $newMatch = [];
 
-        foreach ($matches as $match) {
-            $newMatch[] = [$match[1], $match[2]];
+        for ($i = 0; $i < \count($matches); $i++) {
+            $replacementList[] = $matches[$i][0];
         }
 
-        foreach ($newMatch as $m) {
-            $content = \str_replace($m, self::getWordsSpecificId($m[0], $M[1]), $content);
+        foreach ($replacementList as $bit) {
+            \preg_match('/\${\[([^]]+)\]\[([^]]+)\]}/', $bit, $matches);
+
+            $output = \str_replace($bit, self::getWordsSpecificId($matches[1], $matches[2]), $output);
         }
     }
 }

@@ -73,7 +73,10 @@ class User extends \Discussify\Application {
             'dateFormat' => null,
             'timeFormat' => null,
             'dateTimeFormat' => null,
-            'timeAgo' => true
+            'timeAgo' => true,
+            'themePath' => null,
+            'themeUrl' => null,
+            'imagesetFolder' => null
         ];
     }
 
@@ -161,6 +164,10 @@ class User extends \Discussify\Application {
                 break;
             }
         }
+
+        self::$user->themePath = ROOT_PATH . 'themes/' . $folder. '/';
+        self::$user->themeUrl = self::vars()->baseUrl . '/themes/' . $folder;
+        self::$user->imagesetUrl = self::vars()->baseUrl . '/public/imagesets/' . $imagesetFolder;
 
         \date_default_timezone_set(self::$user->timeZone);
     }
@@ -346,5 +353,32 @@ class User extends \Discussify\Application {
      */
     public static function languagepackId() {
         return self::$user->languagepackId;
+    }
+
+    /**
+     * Returns the path to the themes directory.
+     * 
+     * @return string - Path to theme folder.
+     */
+    public static function themePath() {
+        return self::$user->themePath;
+    }
+
+    /**
+     * Returns the URL to the themes directory.
+     * 
+     * @return string - URL to themes directory.
+     */
+    public static function themeUrl() {
+        return self::$user->themeUrl;
+    }
+
+    /**
+     * Returns the URL to the imageset.
+     * 
+     * @return string - URL to imageset.
+     */
+    public static function imagesetUrl() {
+        return self::$user->imagesetUrl;
     }
  }

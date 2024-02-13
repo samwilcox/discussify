@@ -52,6 +52,9 @@ class Request extends \Discussify\Application {
             'name' => '',
             'present' => false
         ];
+
+        self::parseRequest();
+        self::detectBots();
     }
 
     /**
@@ -106,10 +109,12 @@ class Request extends \Discussify\Application {
      * Checks whether the current request is a search bot or not.
      */
     private function detectBots() {
-        $bots = \unserialize(self::settings()->searchBotList);
+        $bots = \unserialize(self::settings()->search_bot_list);
 
-        for ($i = 0; $i < \count($bots); $i++) {
-            if (\strpos(' ' . \strtolower(self::agent()->get('agent')), \strtolower($bots[$i])) != false) self::$bot->name = $bots[$i];
+        if ($bots && \is_array($bots)) {
+            for ($i = 0; $i < \count($bots); $i++) {
+                if (\strpos(' ' . \strtolower(self::agent()->get('agent')), \strtolower($bots[$i])) != false) self::$bot->name = $bots[$i];
+            }
         }
 
         self::$bot->present = \strlen(self::$bot->name) > 0 ? true : false;

@@ -43,4 +43,15 @@ class IndexModel extends \Discussify\Models\BaseModel {
     public function appIndex() {
         return self::$vars;
     }
+
+    /**
+     * Responsible for handling operations for the:
+     * Controller: index
+     * Action: css
+     * 
+     * @return $vars
+     */
+    public function css() {
+        self::theme()->getCss(self::request()->id);
+    }
 }

@@ -55,9 +55,10 @@ class DataCache extends \Discussify\Application {
             'localization',
             'registry',
             'sessions',
-            'theme_css',
-            'theme_html',
-            'users'
+            'users',
+            'forums',
+            'topics',
+            'posts'
         ];
 
         self::$sorting = [
@@ -67,9 +68,10 @@ class DataCache extends \Discussify\Application {
             'localization' => ' ORDER BY id ASC',
             'registry' => ' ORDER BY id ASC',
             'sessions' => ' ORDER BY id ASC',
-            'theme_css' => ' ORDER BY id ASC',
-            'theme_html' => ' ORDER BY id ASC',
             'users' => ' ORDER BY id ASC',
+            'forums' => ' ORDER BY id ASC',
+            'topics' => ' ORDER BY id ASC',
+            'posts' => ' ORDER BY id ASC'
         ];
     }
 

@@ -1,21 +1,19 @@
 <?php
 
-$str = 'Dude, what the hell is ${[global][sam]} doing? You know what! ${[global][alvin]} is insane isn\'t he???';
+$stuff = '<html><head><title>Sam</title><head><body>Ok <then class=""></then>${[global][sam]} and then he wentt here! And then there is more ${[global][stuff]} here as well.</body></html>';
 
-preg_match_all('/\${\[([^]]+)\]\[([^]]+)\]}/', $str, $matches, PREG_SET_ORDER);
-
-$newMatch = [];
-
-foreach ($matches as $match) {
-    $newMatch[] = [$match[1], $match[2]];
-}
-
-foreach ($newMatch as $m) {
-    if ($m[0] == 'global' && $m[1] == 'sam') {
-        $str = str_replace('${[' . $m[0] . '][' . $m[1] . ']}', 'Sam Wilcox', $str);
-    }
-}
+preg_match_all('/\${\[([^]]+)\]\[([^]]+)\]}/', $stuff, $matches);
 
 echo '<pre>';
-var_dump($str);
-echo '</pre>';
+var_dump($matches);
+echo '</pre><br><br>';
+
+for ($i = 0; $i < \count($matches); $i++) {
+    echo $matches[2][$i] . ' ';
+}
+
+echo '<br><br>';
+
+for ($i = 0; $i < \count($matches); $i++) {
+    echo $matches[1][$i] . ' ';
+}

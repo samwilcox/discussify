@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Discussify - Development Forums</title>
-    <link rel="stylesheet" href="./public/fontawesome/css/all.min.css">
-    <link rel="stylesheet" href="./themes/discussify-default/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./themes/discussify-default/css/common.css?time=19">
-    <link rel="stylesheet" href="./themes/discussify-default/css/hyperlinks.css?time=8">
-    <link rel="stylesheet" href="./themes/discussify-default/css/forms.css?t=3">
-    <script src="./public/js/vendor/jquery.min.js"></script>
-    <script src="./public/js/vendor/jquery-ui.js"></script>
-    <script src="./public/js/vendor/bootstrap.bundle.min.js"></script>
-    <script src="./public/js/common.js?time=78"></script>
+    <title>${communityTitle}</title>
+    <link rel="stylesheet" href="${baseUrl}/public/fontawesome/css/all.min.css?=${timestamp}">
+    <link rel="stylesheet" href="${themeUrl}/css/bootstrap.min.css?=${timestamp}">
+    <link rel="stylesheet" href="${themeUrl}/css/common.css?=${timestamp}">
+    <link rel="stylesheet" href="${themeUrl}/css/hyperlinks.css?=${timestamp}">
+    <link rel="stylesheet" href="${themeUrl}/css/forms.css?=${timestamp}">
+    <script src="./public/js/vendor/jquery.min.js?=${timestamp}"></script>
+    <script src="./public/js/vendor/jquery-ui.js?=${timestamp}"></script>
+    <script src="./public/js/vendor/bootstrap.bundle.min.js?=${timestamp}"></script>
+    <script src="./public/js/common.js?=${timestamp}"></script>
     <script type="application/json" id="app-json">
         {
             "opt_selected_class":"option-selected"
@@ -49,18 +49,18 @@
     <header id="header">
         <div class="table">
             <div class="table-row">
-                <div class="header-left-cell"><img src="./public/imagesets/default/images/logo.png?time=1"></div>
+                <div class="header-left-cell">${communityLogo}</div>
                 <div class="header-center-cell">
-                    <form name="index-search" method="post" action="" enctype="multipart/form-data" id="dropdown-index-search-form">
+                    <form name="index-search" method="post" action="${wrapper}" enctype="multipart/form-data" id="dropdown-index-search-form">
                         <div class="index-search-div" id="dropdown-index-search-div">
-                            <input type="search" name="query" placeholder="Search..." class="index-search-box" id="index-search-box-input" data-options="dropdown-index-search-span" onmouseover="showSearchOptions(this);">
+                            <input type="search" name="query" placeholder="${[global][searchPlaceholder]}" class="index-search-box" id="index-search-box-input" data-options="dropdown-index-search-span" onmouseover="showSearchOptions(this);">
                             <span class="index-search-button"><a href="javascript:void(0)"><i class="fa-solid fa-magnifying-glass"></i></a></span>
                             <span class="index-search-select" id="dropdown-index-search-span" style="display: none;"><a href="javascript:void(0)" id="dropdown-index-search-link" data-menu="dropdown-index-search" data-link="dropdown-index-search-link" data-ignored="dropdown-index-search-icon,search-options-text" onclick="openDropDownMenu(this);"><span id="search-options-text">Anything</span> <i class="fa-solid fa-caret-down" id="dropdown-index-search-icon"></i></a></span>
                         </div>
                     </form>
                 </div>
                 <div class="header-right-cell">
-                    <span class="signin-button"><a href="#"><i class="fa-solid fa-user"></i> Sign In</a></span>
+                    <span class="signin-button"><a href="#"><i class="fa-solid fa-user"></i> ${[global][signInLink]}</a></span>
                     <span class="register-button"><a href="#"><i class="fa-solid fa-pen-to-square"></i> Register</a></span>
                 </div>
             </div>
@@ -108,58 +108,4 @@
                 <span class="forum-sidebar-item"><a href="#"><span class="forum-sidebar-item-icon" style="color: blue;"><i class="fa-solid fa-asterisk"></i></span>Main Discussion</a></span>
             </div>
             <div class="content">
-                <div class="post-item-filter">
-                    <span class="button-light"><a href="javascript:void(0);" id="dropdown-topic-filter-link" data-menu="dropdown-topic-filter" data-link="dropdown-topic-filter-link" data-ignored="dropdown-topic-filter-icon" data-movement="14" onclick="openDropDownMenu(this);"><span id="latest-text">Latest</span> <i class="fa-solid fa-caret-down" id="dropdown-topic-filter-icon"></i></a></span>
-                </div>
-                <div class="post-item">
-                    <div class="post-item-grid">
-                        <div>
-                            <div class="photo-thumbnail"><img src="./uploads/profile-photos/1/photo.jpg"></div>
-                        </div>
-                        <div>
-                            <div class="post-item-row-grid">
-                                <div class="post-item-row-grid-title">Topic Name Here</div>
-                                <div class="post-item-row-grid-reply">
-                                    <span class="post-item-row-grid-reply-item" data-toggle="tooltip" data-placement="top"  title="Sam Wilcox started this topic">
-                                        <strong><i class="fa-solid fa-pencil"></i> Sam Wilcox</strong>
-                                    </span>
-                                    <span class="post-item-row-grid-reply-item">
-                                        <strong><i class="fa-solid fa-reply"></i> Last Reply:</strong> Date and Time by <strong>darkdayze</strong>
-                                    </span>
-                                </div>
-                                <div class="post-item-row-grid-info">This is some example content that would usually be in the reply of the topic. Who knows what it really could be. Of course we can only allow so many characters here...</div>
-                            </div>
-                        </div>
-                        <div class="post-item-grid-info">
-                            <div class="post-item-grid-info-grid">
-                                <div>
-                                    <span class="post-item-grid-info-item">
-                                        <span class="forum-bubble" style="background-color: orange;"><i class="fa-regular fa-comments"></i>Main Discussion</span>
-                                    </span>
-                                    <span class="post-item-grid-info-item"data-toggle="tooltip" data-placement="top" title="This topic has 1.2K posts">
-                                        1.2K <i class="fa-regular fa-comment"></i>
-                                    </span>
-                                </div>
-                                <div class="floatRight">
-                                    <span class="post-item-grid-info-item"data-toggle="tooltip" data-placement="top" title="This topic has 2.3M views">
-                                        2.3M <i class="fa-solid fa-eye"></i>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="post-item-load-more">
-                    <span class="button-light"><a href="javascript:void(0)">Load More</a></span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- PLEASE DO NOT REMOVE THIS TAG BELOW -->
-    <div class="powered-by" id="powered-by-box">
-        All times are <strong>America/Boise</strong><br><br>
-        Powered by <strong><a href="https://www.discussify.com" target="_blank">Discussify</a></strong> v0.1.0
-    </div>
-    <!-- END OF TAG TO NOT REMOVE -->
-</body>
-</html>
+                ${body}
