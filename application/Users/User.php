@@ -233,6 +233,17 @@ class User extends \Discussify\Application {
     }
 
     /**
+     * Returns whether the current user has permission for the given feature.
+     * 
+     * @param string $feature - The name of the feature to check.
+     * @return bool - True if valid permissions, false otherwise.
+     */
+    public static function hasFeaturePermissions($feature) {
+        // TO-DO: FINISH AT A LATER POINT - TRUE FOR DEVELOPMENT.
+        return true;
+    }
+
+    /**
      * Returns the given member's username.
      * 
      * @param int $id - The member identifier (default: signed in member).
@@ -255,7 +266,7 @@ class User extends \Discussify\Application {
      * @return string - Time zone string.
      */
     public static function getTimeZone($id = null) {
-        if ($id === null) $id = self::$user->timeZone;
+        if ($id === null) return self::$user->timeZone;
 
         $data = self::getMemberData('time_zone', $id);
 
@@ -380,5 +391,14 @@ class User extends \Discussify\Application {
      */
     public static function imagesetUrl() {
         return self::$user->imagesetUrl;
+    }
+
+    /**
+     * Returns whether the user is signed into their account.
+     * 
+     * @return bool - True if signed in, false otherwise.
+     */
+    public static function signedIn() {
+        return self::$user->signedIn;
     }
  }

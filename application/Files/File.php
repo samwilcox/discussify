@@ -137,7 +137,7 @@ class File extends \Discussify\Application {
      * 
      * @param string $error - Error message.
      */
-    private function fatalError($error) {
+    private static function fatalError($error) {
         throw new \Discussify\Exceptions\FileException($error);
     }
 }

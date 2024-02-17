@@ -99,7 +99,7 @@ class Localization extends \Discussify\Application {
      * @return string - Resulting localization with the item replaced.
      */
     public static function wordReplace($words, $toReplace, $replacement) {
-        return \str_replace('{{' . $toReplace . '}}', $replacement, $words);
+        return \str_replace('${' . $toReplace . '}', $replacement, $words);
     }
 
     /**

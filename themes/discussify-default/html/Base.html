@@ -1,111 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>${communityTitle}</title>
-    <link rel="stylesheet" href="${baseUrl}/public/fontawesome/css/all.min.css?=${timestamp}">
-    <link rel="stylesheet" href="${themeUrl}/css/bootstrap.min.css?=${timestamp}">
-    <link rel="stylesheet" href="${themeUrl}/css/common.css?=${timestamp}">
-    <link rel="stylesheet" href="${themeUrl}/css/hyperlinks.css?=${timestamp}">
-    <link rel="stylesheet" href="${themeUrl}/css/forms.css?=${timestamp}">
-    <script src="./public/js/vendor/jquery.min.js?=${timestamp}"></script>
-    <script src="./public/js/vendor/jquery-ui.js?=${timestamp}"></script>
-    <script src="./public/js/vendor/bootstrap.bundle.min.js?=${timestamp}"></script>
-    <script src="./public/js/common.js?=${timestamp}"></script>
-    <script type="application/json" id="app-json">
-        {
-            "opt_selected_class":"option-selected"
-        }
-    </script>
-    <script>
-        setAllDefaultOptions({
-            'searchoptions':'Anything',
-            'latest':'Latest'
-        });
-    </script>
-</head>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>${communityTitle}</title>
+        <link rel="stylesheet" href="${baseUrl}/public/fontawesome/css/all.min.css">
+        <link rel="stylesheet" href="${themeUrl}/css/bootstrap.min.css?time=${timestamp}">
+        <link rel="stylesheet" href="${themeUrl}/css/common.css?time=${timestamp}">
+        <link rel="stylesheet" href="${themeUrl}/css/hyperlinks.css?time=${timestamp}">
+        <link rel="stylesheet" href="${themeUrl}/css/forms.css?time=${timestamp}">
+        <script src="${baseUrl}/public/js/vendor/jquery.min.js?time=${timestamp}"></script>
+        <script src="${baseUrl}/public/js/vendor/jquery-ui.js?time=${timestamp}"></script>
+        <script src="${baseUrl}/public/js/vendor/bootstrap.bundle.min.js?time=${timestamp}"></script>
+        <script src="${baseUrl}/public/js/common.js?time=${timestamp}"></script>
+        <script type="application/json" id="app-json">
+            {
+                "tag_cloud":true
+            }
+        </script>
+    </head>
 <body>
-    <div class="background-disabler" id="background-disabler"></div>
-    <div class="drop-down-menu" id="dropdown-index-search">
+    ${languageDropDown}${themeDropDown}${extendedMenuDropDown}
+    <div class="drop-down-menu" id="dropdown-filter">
         <span class="drop-down-menu-items">
-            <span id="so-anything" class="option-selected"><a href="javascript:void(0);" id="search-options-anything" data-id="searchoptions" data-text="search-options-text" data-selected="Anything" data-checkbox="fa-solid fa-square-check" data-icon="so-icon-" data-item="so-" onclick="optionSelect(this);"><span class="checkboxDD" id="so-icon-anything"><i class="fa-solid fa-square-check"></i>  </span>Anything</a></span>
-            <span id="so-topics"><a href="javascript:void(0);" id="search-options-topics" data-id="searchoptions" data-text="search-options-text" data-selected="Topics" data-checkbox="fa-solid fa-square-check" data-icon="so-icon-" data-item="so-"  onclick="optionSelect(this);"><span class="checkboxDD" id="so-icon-topics"></span>Topics</a></span>
-            <span id="so-members"><a href="javascript:void(0);" id="search-options-members" data-id="searchoptions" data-text="search-options-text" data-selected="Members" data-checkbox="fa-solid fa-square-check" data-icon="so-icon-" data-item="so-"  onclick="optionSelect(this);"><span class="checkboxDD" id="so-icon-members"></span>Members</a></span>
-            <span id="so-tags"><a href="javascript:void(0);" id="search-options-tags" data-id="searchoptions" data-text="search-options-text" data-selected="Tags" data-checkbox="fa-solid fa-square-check" data-icon="so-icon-" data-item="so-"  onclick="optionSelect(this);"><span class="checkboxDD" id="so-icon-tags"></span>Tags</a></span>
+        <span class="drop-down-menu-item-selected"><a href="javascript:void(0);"><i class="fa-regular fa-circle-check"></i>Latest</a></span>
+        <span><a href="javascript:void(0);">Recent</a></span>
+        <span><a href="javascript:void(0);">Popular</a></span>
+        <span><a href="javascript:void(0);">Upvoted</a></span>
+        <span><a href="javascript:void(0);">Trending</a></span>
+        <span><a href="javascript:void(0);">Answered</a></span>
         </span>
     </div>
-    <div class="drop-down-menu" id="dropdown-topic-filter">
-        <span class="drop-down-menu-items">
-            <span id="lt-latest" class="option-selected"><a href="javascript:void(0)" data-id="latest" data-text="latest-text" data-selected="Latest" data-checkbox="fa-solid fa-square-check" data-icon="lt-icon-" data-item="lt-" onclick="optionSelect(this);"><span class="checkboxDD" id="ly-icon-latest"><i class="fa-solid fa-square-check"></i>  </span>Latest</a></span>
-            <span id="lt-newest"><a href="javascript:void(0)" data-id="latest" data-text="latest-text" data-selected="Newest" data-checkbox="fa-solid fa-square-check" data-icon="lt-icon-" data-item="lt-" onclick="optionSelect(this);"><span class="checkboxDD" id="lt-icon-newest"></span>Newest</a></span>
-            <span id="lt-oldest"><a href="javascript:void(0)" data-id="latest" data-text="latest-text" data-selected="Oldest" data-checkbox="fa-solid fa-square-check" data-icon="lt-icon-" data-item="lt-" onclick="optionSelect(this);"><span class="checkboxDD" id="lt-icon-older"></span>Oldest</a></span>
-            <span id="lt-top"><a href="javascript:void(0)" data-id="latest" data-text="latest-text" data-selected="Top" data-checkbox="fa-solid fa-square-check" data-icon="lt-icon-" data-item="lt-" onclick="optionSelect(this);"><span class="checkboxDD" id="lt-icon-top"></span>Top</a></span>
-            <span id="lt-trending"><a href="javascript:void(0)" data-id="latest" data-text="latest-text" data-selected="Trending" data-checkbox="fa-solid fa-square-check" data-icon="lt-icon-" data-item="lt-" onclick="optionSelect(this);"><span class="checkboxDD" id="lt-icon-trending"></span>Trending</a></span>
-        </span>
-    </div>
-    <span class="side-bar-toggle"><a href="javascript:void(0)" id="toggle-link" data-side-bar-classes="side-bar,side-bar-collapsed" data-collapse="fa-angles-right" data-expand="fa-angles-left" data-side-bar="side-bar" data-full="side-bar-menu-full" data-icon="toggle-icon" data-link="toggle-link" data-condensed="side-bar-menu-min" data-bottom-links-full="side-bar-bottom-full" data-bottom-links-min="side-bar-bottom-min" onclick="toggleSideBar(this);"><i class="fa-solid fa-angles-right" id="toggle-icon"></i></a></span>
-    <header id="header">
-        <div class="table">
-            <div class="table-row">
-                <div class="header-left-cell">${communityLogo}</div>
-                <div class="header-center-cell">
-                    <form name="index-search" method="post" action="${wrapper}" enctype="multipart/form-data" id="dropdown-index-search-form">
-                        <div class="index-search-div" id="dropdown-index-search-div">
-                            <input type="search" name="query" placeholder="${[global][searchPlaceholder]}" class="index-search-box" id="index-search-box-input" data-options="dropdown-index-search-span" onmouseover="showSearchOptions(this);">
-                            <span class="index-search-button"><a href="javascript:void(0)"><i class="fa-solid fa-magnifying-glass"></i></a></span>
-                            <span class="index-search-select" id="dropdown-index-search-span" style="display: none;"><a href="javascript:void(0)" id="dropdown-index-search-link" data-menu="dropdown-index-search" data-link="dropdown-index-search-link" data-ignored="dropdown-index-search-icon,search-options-text" onclick="openDropDownMenu(this);"><span id="search-options-text">Anything</span> <i class="fa-solid fa-caret-down" id="dropdown-index-search-icon"></i></a></span>
+    <div class="content-grid">
+        <header>
+            <div class="header-bar-above">
+                <div class="floater">
+                    <div class="header-bar-above-grid">
+                        <div class="header-left">
+                            <span class="lang-theme-selectors">${languageLink}${themeLink}</span>
                         </div>
-                    </form>
-                </div>
-                <div class="header-right-cell">
-                    <span class="signin-button"><a href="#"><i class="fa-solid fa-user"></i> ${[global][signInLink]}</a></span>
-                    <span class="register-button"><a href="#"><i class="fa-solid fa-pen-to-square"></i> Register</a></span>
+                        <div class="header-right">${userBar}</div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </header>
-    <div class="side-bar" id="side-bar">
-        <div class="side-bar-menu-full" id="side-bar-menu-full">
-            <a href="#" data-toggle="tooltip" data-placement="right" title="Forums"><i class="fa-solid fa-comments"></i><span class="link-text">Forums</span></a>
-            <a href="#" data-toggle="tooltip" data-placement="right" title="Members"><i class="fa-solid fa-user-group"></i><span class="link-text">Members</span></a>
-            <a href="#" data-toggle="tooltip" data-placement="right" title="Active Users"><i class="fa-solid fa-globe"></i><span class="link-text">Active Users</span></a>
-            <a href="#" data-toggle="tooltip" data-placement="right" title="Search"><i class="fa-solid fa-magnifying-glass"></i><span class="link-text">Search</span></a>
-            <a href="#" data-toggle="tooltip" data-placement="right" title="Recent"><i class="fa-solid fa-clock"></i><span class="link-text">Recent</span></a>
-            <a href="#" data-toggle="tooltip" data-placement="right" title="Popular"><i class="fa-solid fa-fire"></i><span class="link-text">Popular</span></a>
-            <a href="#" data-toggle="tooltip" data-placement="right" title="Groups"><i class="fa-solid fa-users-between-lines"></i><span class="link-text">Groups</span></a>
-            <a href="#" data-toggle="tooltip" data-placement="right" title="Community Leaders"><i class="fa-solid fa-user-shield"></i><span class="link-text">Leaders</span></a>
-            <a href="#" data-toggle="tooltip" data-placement="right" title="Tags"><i class="fa-solid fa-tags"></i><span class="link-text">Tags</span></a>
-            <a href="#" data-toggle="tooltip" data-placement="right" title="Help"><i class="fa-solid fa-circle-question"></i><span class="link-text">Help</span></a>
-        </div>
-        <div class="side-bar-menu-min" id="side-bar-menu-min">
-            <a href="#" data-toggle="tooltip" data-placement="right" title="Forums"><i class="fa-solid fa-comments"></i></a>
-            <a href="#" data-toggle="tooltip" data-placement="right" title="Members"><i class="fa-solid fa-user-group"></i></a>
-            <a href="#" data-toggle="tooltip" data-placement="right" title="Active Users"><i class="fa-solid fa-globe"></i></a>
-            <a href="#" data-toggle="tooltip" data-placement="right" title="Search"><i class="fa-solid fa-magnifying-glass"></i></a>
-            <a href="#" data-toggle="tooltip" data-placement="right" title="Recent"><i class="fa-solid fa-clock"></i></a>
-            <a href="#" data-toggle="tooltip" data-placement="right" title="Popular"><i class="fa-solid fa-fire"></i></a>
-            <a href="#" data-toggle="tooltip" data-placement="right" title="Groups"><i class="fa-solid fa-users-between-lines"></i></a>
-            <a href="#" data-toggle="tooltip" data-placement="right" title="Community Leaders"><i class="fa-solid fa-user-shield"></i></a>
-            <a href="#" data-toggle="tooltip" data-placement="right" title="Tags"><i class="fa-solid fa-tags"></i></a>
-            <a href="#" data-toggle="tooltip" data-placement="right" title="Help"><i class="fa-solid fa-circle-question"></i></a>
-        </div>
-        <div class="side-bar-bottom side-bar-menu-bottom" style="display: none;" id="side-bar-bottom-full">
-            <span class="side-bar-menu-bottom"><a href="#" data-toggle="tooltip" data-placement="right" title="Select A Language"><i class="fa-solid fa-language"></i> Select Language</a></span>
-            <span class="side-bar-menu-bottom"></span><a href="#" data-toggle="tooltip" data-placement="right" title="Select A Theme"><i class="fa-solid fa-palette"></i> Select Theme</a></span>
-        </div>
-        <div class="side-bar-bottom" id="side-bar-bottom-min">
-            <span class="side-bar-menu-bottom-min"><a href="#" data-toggle="tooltip" data-placement="right" title="Select A Language"><i class="fa-solid fa-language"></i></a></span>
-            <span class="side-bar-menu-bottom-min"><a href="#" data-toggle="tooltip" data-placement="right" title="Select A Theme"><i class="fa-solid fa-palette"></i></a></span>
-        </div>
-    </div>
-    <div class="content-body">
-        <div class="breadcrumbs-bar"><i class="fa-solid fa-house-chimney"></i> <a href="#">Home</a><span class="breadcrumbs-seperator">/</span><span class="breadcrumbs-selected">Forums</span></div>
-        <div class="app-layout-grid">
-            <div class="app-layout-grid-left">
-                <span class="forum-sidebar-item-selected"><a href="#"><span class="forum-sidebar-item-icon" style="color: green;"><i class="fa-regular fa-comments"></i></span>All Discussions</a></span>
-                <span class="forum-sidebar-item"><a href="#"><span class="forum-sidebar-item-icon" style="color: blue;"><i class="fa-solid fa-asterisk"></i></span>Main Discussion</a></span>
+            <div class="header-bar-under">
+                <div class="floater">
+                    <div class="header-bar-under-grid">
+                        <div class="header-left">${communityLogo}</div>
+                        <div class="header-right menu-links">${forumsLink}${membersLink}${activeUsersLink}${searchLink}${helpLink}${extendedMenuLink}</div>
+                    </div>
+                </div>
             </div>
-            <div class="content">
-                ${body}
+        </header>
+        <div class="page-title-block">
+            <span class="page-title-block-title">${pageTitle}</span><br>
+            <span class="page-title-block-nav"><i class="fa-solid fa-house-chimney"></i> ${breadcrumbs}</span>
+        </div>
+        <article>
+            <div class="floater">

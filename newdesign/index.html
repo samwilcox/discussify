@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Discussify - Development Forums</title>
+        <link rel="stylesheet" href="../public/fontawesome/css/all.min.css">
+        <link rel="stylesheet" href="./themes/discussify-default/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./themes/discussify-default/css/common.css?time=8">
+        <link rel="stylesheet" href="./themes/discussify-default/css/hyperlinks.css?time=7">
+        <link rel="stylesheet" href="./themes/discussify-default/css/forms.css?time=7">
+        <script src="../public/js/vendor/jquery.min.js"></script>
+        <script src="../public/js/vendor/jquery-ui.js"></script>
+        <script src="../public/js/vendor/bootstrap.bundle.min.js"></script>
+        <script src="../public/js/common.js?t=2"></script>
+        <script type="application/json" id="app-json">
+            {
+                "tag_cloud":true
+            }
+        </script>
+    </head>
+<body>
+    <div class="drop-down-menu" id="dropdown-language">
+        <span class="drop-down-menu-items">
+            <a href="#">English (US-American)</a>
+        </span>
+    </div>
+    <div class="drop-down-menu" id="dropdown-theme">
+        <span class="drop-down-menu-items">
+            <a href="#">Discussify Default</a>
+        </span>
+    </div>
+    <div class="drop-down-menu" id="dropdown-extended-menu">
+        <span class="drop-down-menu-items">
+            <a href="#"><i class="fa-solid fa-user-shield"></i> Community Leaders</a>
+            <a href="#"><i class="fa-solid fa-people-group"></i> Groups</a>
+            <a href="#"><i class="fa-solid fa-shield-halved"></i> Privacy Policy</a>
+            <a href="#"><i class="fa-regular fa-paper-plane"></i> Contact Us</a>
+        </span>
+    </div>
+    <div class="drop-down-menu" id="dropdown-filter">
+        <span class="drop-down-menu-items">
+        <span class="drop-down-menu-item-selected"><a href="javascript:void(0);"><i class="fa-regular fa-circle-check"></i>Latest</a></span>
+        <span><a href="javascript:void(0);">Recent</a></span>
+        <span><a href="javascript:void(0);">Popular</a></span>
+        <span><a href="javascript:void(0);">Upvoted</a></span>
+        <span><a href="javascript:void(0);">Trending</a></span>
+        <span><a href="javascript:void(0);">Answered</a></span>
+        </span>
+    </div>
+    <div class="content-grid">
+        <header>
+            <div class="header-bar-above">
+                <div class="floater">
+                    <div class="header-bar-above-grid">
+                        <div class="header-left">
+                            <span class="lang-theme-selectors">
+                                <a href="javascript:void(0);" id="dropdown-language-link" data-menu="dropdown-language" data-link="dropdown-language-link" data-ignored="dropdown-language-icon1,dropdown-language-icon2" onclick="openDropDownMenu(this);"><i class="fa-solid fa-language" id="dropdown-language-icon1"></i> Language <i class="fa-solid fa-caret-down" id="dropdown-language-icon2"></i></a>
+                                <a href="javascript:void(0);" id="dropdown-theme-link" data-menu="dropdown-theme" data-link="dropdown-theme-link" data-ignored="dropdown-theme-icon1,dropdown-theme-icon2" onclick="openDropDownMenu(this);"><i class="fa-solid fa-palette" id="dropdown-theme-icon1"></i> Theme <i class="fa-solid fa-caret-down" id="dropdown-theme-icon2"></i></a>
+                            </span>
+                        </div>
+                        <div class="header-right">
+                            <span class="guest-bar-items">
+                                <a href="#"><i class="fa-solid fa-right-to-bracket"></i>Sign In</a><a href="#"><i class="fa-solid fa-user-plus"></i>Register</a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="header-bar-under">
+                <div class="floater">
+                    <div class="header-bar-under-grid">
+                        <div class="header-left"><a href="#"><img src="./public/imagesets/default/images/logo.png" class="img-hover"></a></div>
+                        <div class="header-right menu-links">
+                            <a href="#"><i class="fa-regular fa-comments"></i>Forums</a>
+                            <a href="#"><i class="fa-solid fa-user-group"></i>Members</a>
+                            <a href="#"><i class="fa-solid fa-globe"></i>Active Users</a>
+                            <a href="#"><i class="fa-solid fa-magnifying-glass"></i>Search</a>
+                            <a href="#"><i class="fa-regular fa-circle-question"></i>Help</a>
+                            <a href="#" style="padding-left: 18px;" id="dropdown-extended-menu-link" data-menu="dropdown-extended-menu" data-link="dropdown-extended-menu-link" data-ignored="dropdown-extended-menu-icon1,dropdown-extended-menu-icon2" onclick="openDropDownMenu(this);"><i class="fa-solid fa-bars" id="dropdown-extended-menu-icon1"></i><i class="fa-solid fa-chevron-down" id="dropdown-extended-menu-icon2"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <div class="page-title-block">
+            <span class="page-title-block-title">Forums</span><br>
+            <span class="page-title-block-nav"><i class="fa-solid fa-house-chimney"></i> <a href="#">Home</a><span class="page-title-block-nav-seperator">/</span><span class="page-title-block-nav-selected">Forums</span></span>
+        </div>
+        <article>
+            <div class="floater">
+                <div class="blocks-grid">
+                    <div class="blocks-grid-islands">
+                        <div class="island-header">Forums</div>
+                        <div class="island-content">
+                            <div class="island-content-padding">
+                                <span class="item-rows">
+                                    <a href="#"><i class="fa-regular fa-comments"></i>All Forums</a>
+                                    <a href="#"><i class="fa-solid fa-dice-d6" style="color: #800080;"></i>Main Discussion</a>
+                                    <a href="#"><i class="fa-solid fa-shield-halved" style="color:cadetblue"></i>Security Concerns</a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="blocks-grid-content">
+                        <div class="double-column-grid">
+                            <div class="double-column-grid-left">
+                                <span class="dropdown-button"><a href="javascript:void(0);" id="dropdown-filter-link" data-menu="dropdown-filter" data-link="dropdown-filter-link" data-ignored="dropdown-filter-icon" onclick="openDropDownMenu(this);">Latest <i class="fa-solid fa-caret-down" id="dropdown-filter-icon"></i></a></span>
+                            </div>
+                            <div class="double-column-grid-right">
+                                <span class="blue-button"><a href="#"><i class="fa-solid fa-plus"></i> New Topic</a></span>
+                            </div>
+                        </div>
+                        <div class="topic-item">
+                            <div class="topic-item-grid">
+                                <div>
+                                    <span class="photo-thumbnail"><img src="../uploads/profile-photos/1/1.jpg"></span>
+                                </div>
+                                <div>
+                                    <div class="topic-item-title-grid">
+                                        <span class="topic-item-title">Topic Name Here</span>
+                                    </div>
+                                    <div class="topic-item-preview">There could be so much text here, but of course you know were are going to limit the amount of characters allowed. Can only allow so many characte...</div>
+                                    <div class="topic-item-stats">
+                                        <span class="topic-item-stat-item" data-toggle="tooltip" data-placement="top" title="This topic has 12.4K posts"><i class="fa-regular fa-comments"></i>12.4K</span>
+                                        <span class="topic-item-stat-item" data-toggle="tooltip" data-placement="top" title="This topic has 165.4M views"><i class="fa-solid fa-eye"></i>165.4M</span>
+                                    </div>
+                                </div>
+                                <div class="topic-item-info">
+                                    <div class="topic-item-info-grid">
+                                        <div>
+                                            <span class="forum-bubble" style="color: #FFF; background-color: #800080;" data-toggle="tooltip" data-placement="top" title="This topic belongs to the Main Discussion forum"><i class="fa-solid fa-dice-d6"></i>Main Discussion</span>
+                                        </div>
+                                        <div class="topic-item-info-grid-bottom-grid">
+                                            <div class="topic-item-info-grid-bottom"><i class="fa-solid fa-pen-to-square"></i> By: <strong>Sam Wilcox</strong> date and time</div>
+                                            <div class="topic-item-info-grid-bottom"><i class="fa-solid fa-reply"></i> <strong>darkdayze</strong> replied date and time</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="topic-item">
+                            <div class="topic-item-grid">
+                                <div>
+                                    <span class="photo-thumbnail"><img src="../uploads/profile-photos/1/1.jpg"></span>
+                                </div>
+                                <div>
+                                    <div class="topic-item-title-grid">
+                                        <span class="topic-item-title">Topic Name Here</span>
+                                    </div>
+                                    <div class="topic-item-preview">There could be so much text here, but of course you know were are going to limit the amount of characters allowed. Can only allow so many characte...</div>
+                                    <div class="topic-item-stats">
+                                        <span class="topic-item-stat-item" data-toggle="tooltip" data-placement="top" title="This topic has 12.4K posts"><i class="fa-regular fa-comments"></i>12.4K</span>
+                                        <span class="topic-item-stat-item" data-toggle="tooltip" data-placement="top" title="This topic has 165.4M views"><i class="fa-solid fa-eye"></i>165.4M</span>
+                                    </div>
+                                </div>
+                                <div class="topic-item-info">
+                                    <div class="topic-item-info-grid">
+                                        <div>
+                                            <span class="forum-bubble" style="color: #FFF; background-color: #800080;" data-toggle="tooltip" data-placement="top" title="This topic belongs to the Main Discussion forum"><i class="fa-solid fa-dice-d6"></i>Main Discussion</span>
+                                        </div>
+                                        <div class="topic-item-info-grid-bottom-grid">
+                                            <div class="topic-item-info-grid-bottom"><i class="fa-solid fa-pen-to-square"></i> By: <strong>Sam Wilcox</strong> date and time</div>
+                                            <div class="topic-item-info-grid-bottom"><i class="fa-solid fa-reply"></i> <strong>darkdayze</strong> replied date and time</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="centered-margin-top lite-button"><a href="javascript:void(0);">Load More</a></div>
+                    </div>
+                    <div class="blocks-grid-islands">
+                        <div class="island-header">Tag Cloud</div>
+                        <div class="island-content">
+                            <div class="island-content-padding">
+                                <div class="tag-flex">
+                                    <div class="tags"><span class="tag"><a href="#">Sam</a></span><span class="tag"><a href="#">Sam</a></span><span class="tag"><a href="#">Sam</a></span><span class="tag"><a href="#">Sam</a></span><span class="tag"><a href="#">Sam</a></span><span class="tag"><a href="#">Sam</a></span><span class="tag"><a href="#">Sam</a></span><span class="tag"><a href="#">Sam</a></span><span class="tag"><a href="#">Sam</a></span><span class="tag"><a href="#">Sam</a></span><span class="tag"><a href="#">Sam</a></span><span class="tag"><a href="#">Sam</a></span><span class="tag"><a href="#">Sam</a></span><span class="tag"><a href="#">Sam</a></span><span class="tag"><a href="#">Sam</a></span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+        <footer>
+            <div class="floater">
+                <div class="footer-grid">
+                    <div class="footer-grid-left">
+                        All times are <strong>America/Boise</strong> (GMT -07:00)
+                    </div>
+                    <div class="footer-grid-center">
+                        <i class="fa-regular fa-clock"></i>  <strong>Time Now:</strong> timehere
+                    </div>
+                    <div class="footer-grid-right">
+                        Powered by <strong><a href="https://www.discussify.com" target="_blank">Discussify</a></strong> v0.1.0
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

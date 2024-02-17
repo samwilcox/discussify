@@ -39,6 +39,7 @@ class Application {
         \Discussify\Users\User::i();
         \Discussify\Localization\Localization::i();
         \Discussify\Core\Registry::i();
+        \Discussify\Helpers\Utils::i()->initializeBreadcrumbs();
 
         $controller = isset(\Discussify\Core\Request::i()->controller) ? \ucfirst(\Discussify\Core\Request::i()->controller) : 'Index';
         $controller = $controller . 'Controller';
@@ -97,4 +98,6 @@ class Application {
     public static function type() { return \Discussify\Type\Types::i(); }
     public static function output() { return \Discussify\Output\Output::i(); }
     public static function seo() { return \Discussify\Url\Seo::i(); }
+    public static function forums() { return \Discussify\Helpers\Forums::i(); }
+    public static function block() { return \Discussify\Blocks\Block::i(); }
 }

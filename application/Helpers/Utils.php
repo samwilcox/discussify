@@ -43,25 +43,165 @@ class Utils extends \Discussify\Application {
     }
 
     /**
-     * Determines which API handling class the request should be handled by.
-     * All incoming data from React will have three JSON fields:
-     * -> route: the routing API class.
-     * -> task: the task to perform.
-     * -> data: any additional data.
+     * Returns a drop down listing of the specified type of resource.
      * 
-     * Route indicates which API class to use.
-     * 
-     * @param mixed $data - The incoming data.
+     * @param string $type - The resource type to get listing for.
+     * @return mixed - Select listing.
      */
-    public static function determineApiRoute($data) {
-        switch ($data->route) {
-            case 'forums':
-                self::apiForums()->handleRequest($data);
+    public static function getSelectionList($type) {
+        $listing = '';
+
+        switch ($type) {
+            case 'language':
+                $data = self::cache()->getData('installed_languagepacks');
+
+                foreach ($data as $lang) {
+                    if ($lang->id === self::user()->languagepackId()) {
+                        $listing .= self::output()->getPartial(
+                            'UtilsHelper',
+                            'List',
+                            'OptionSelected', [
+                                'url' => self::seo()->url('index', 'language', ['id' => $lang->id]),
+                                'name' => $lang->name
+                            ]
+                        );
+                    } else {
+                        $listing .= self::output()->getPartial(
+                            'UtilsHelper',
+                            'List',
+                            'Option', [
+                                'url' => self::seo()->url('index', 'language', ['id' => $lang->id]),
+                                'name' => $lang->name
+                            ]
+                        );
+                    }
+                }
                 break;
 
-            case 'users':
-                self::apiUsers()->handleRequest($data);
+            case 'theme':
+                $data = self::cache()->getData('installed_themes');
+
+                foreach ($data as $theme) {
+                    if ($theme->id === self::user()->themeId()) {
+                        $listing .= self::output()->getPartial(
+                            'UtilsHelper',
+                            'List',
+                            'OptionSelected', [
+                                'url' => self::seo()->url('index', 'theme', ['id' => $theme->id]),
+                                'name' => $theme->name
+                            ]
+                        );
+                    } else {
+                        $listing .= self::output()->getPartial(
+                            'UtilsHelper',
+                            'List',
+                            'Option', [
+                                'url' => self::seo()->url('index', 'theme', ['id' => $theme->id]),
+                                'name' => $theme->name
+                            ]
+                        );
+                    }
+                }
                 break;
         }
+
+        return $listing;
+    }
+
+    /**
+     * Creates a brand new drop down menu for the given list.
+     * 
+     * @param string $id - The ID for the HTML id tag (dropdown-{id}).
+     * @param mixed $list - Listing source.
+     * @return mixed - Drop down source.
+     */
+    public static function createDropDown($id, $list) {
+        return self::output()->getPartial(
+            'UtilsHelper',
+            'DropDown',
+            'Generic', [
+                'id' => $id,
+                'items' => $list
+            ]
+        );
+    }
+
+    /**
+     * Initializes the initial breadcrumbs so it's ready for added
+     * links at a later point.
+     */
+    public static function initializeBreadcrumbs() {
+        if (self::settings()->home_breadcrumb_enabled && \strlen(self::settings()->home_breadcrumb_title) > 0 && \strlen(self::settings()->home_breadcrumb_url) > 0) {
+            self::newBreadcrumb(self::settings()->home_breadcrumb_title, self::settings()->home_breadcrumb_url, false, true);
+        }
+    }
+
+    /**
+     * Adds a new breadcrumb to the breadcrumbs array.
+     * 
+     * @param string $title - Title of the breadcrumb.
+     * @param string $url - URL address of the new breadcrumb.
+     * @param bool $selected - Whether the breadcrumb is the current one.
+     * @param bool $first - Whether this is the first breadcrumb.
+     */
+    public static function newBreadcrumb($title, $url, $selected = false, $first = false) {
+        $newCrumb = self::vars()->breadcrumbs;
+        $newCrumb[] = ['title' => $title, 'url' => $url, 'selected' => $selected, 'first' => $first];
+        self::vars()->breadcrumbs = $newCrumb;
+    }
+
+    /**
+     * Returns the built breadcrumbs.
+     * 
+     * @return mixed - Breadcrumbs.
+     */
+    public static function getBreadcrumbs() {
+        if (!isset(self::vars()->breadcrumbs)) return;
+
+        $breadcrumbs = '';
+
+        foreach (self::vars()->breadcrumbs as $crumb) {
+            if ($crumb['selected']) {
+                $breadcrumbs .= self::output()->getPartial(
+                    'UtilsHelper',
+                    'Breadcrumb',
+                    'Selected', [
+                        'title' => $crumb['title'],
+                        'seperator' => $crumb['selected'] ? self::output()->getPartial('UtilsHelper', 'Breadcrumb', 'Seperator') : ''
+                    ]
+                );
+            } else {
+                $breadcrumbs .= self::output()->getPartial(
+                    'UtilsHelper',
+                    'Breadcrumb',
+                    'Normal', [
+                        'title' => $crumb['title'],
+                        'url' => $crumb['url'],
+                        'seperator' => $crumb['selected'] ? self::output()->getPartial('UtilsHelper', 'Breadcrumb', 'Seperator') : ''
+                    ]
+                );
+            }
+        }
+
+        return $breadcrumbs;
+    }
+
+    /**
+     * This method compares the sort_order for sorting.
+     * 
+     * @param array $a - First array.
+     * @param array $b - Second array.
+     */
+    public static function sortBySortOrder($a, $b) {
+        return $a['sort_order'] - $b['sort_order'];
+    }
+
+    /**
+     * Sets the page title.
+     * 
+     * @param string $title - The title to set.
+     */
+    public static function setPageTitle($title) {
+        self::vars()->pageTitle = $title;
     }
 }

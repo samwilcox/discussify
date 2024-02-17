@@ -32,7 +32,11 @@ $(document).ready(function() {
     $('[data-toggle="tooltip"]').tooltip();
     parseJson();
 
-    //searchOptSelected['search-options-text'] = 'Anything';
+    if (json.tag_cloud != null) {
+        if (json.tag_cloud) {
+            generateTagCloud();
+        }
+    }
 });
 
 /**
@@ -123,6 +127,8 @@ function openDropDownMenu(e)  {
         currentDropDown = null;
         triggeredElementList = null;
     }
+
+    console.log(ignoredElements);
 
     var difference = ($(window).width() - $("#" + ignoredElements[0]).offset().left);
     var spaceBelow = $(window).height() - (linkElement.offset().top + linkElement.height() + 5);
@@ -215,4 +221,17 @@ function optionSelect(e) {
     $("#" + selectedItemID).addClass(json.opt_selected_class);
 
     searchOptSelected[id] = $(e).data('selected');
+}
+
+/**
+ * Generates the tag cloud using random font sizes.
+ */
+function generateTagCloud() {
+    var tags = document.querySelectorAll('.tag');
+    console.log(tags);
+    
+    tags.forEach(function(tag) {
+        var fontSize = Math.floor(Math.random() * 20) + 12;
+        tag.style.fontSize = fontSize + 'px';
+    });
 }

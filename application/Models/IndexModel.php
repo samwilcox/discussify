@@ -41,6 +41,8 @@ class IndexModel extends \Discussify\Models\BaseModel {
      * @return $vars
      */
     public function appIndex() {
+        self::utils()->newBreadcrumb(self::localization()->getWords('index', 'forumsBreadcrumbTitle'), self::seo()->url('index'), true, false);
+        self::utils()->setPageTitle(self::localization()->getWords('index', 'forumsPageTitle'));
         return self::$vars;
     }
 
