@@ -68,7 +68,7 @@ class Math extends \Discussify\Application {
      */
     public static function formatNumber($number, $decimals = 2) {
         if ($number < 1000) {
-            return \number_format($number, $decimals);
+            return $number;
         } elseif ($number < 1000000) {
             return self::formatWithDecimalPlaces($number / 1000, $decimals, 1) . 'K';
         } elseif ($number < 1000000000) {
@@ -89,7 +89,7 @@ class Math extends \Discussify\Application {
      * @param int $minDecimalPlaces - The minimum number of places to use.
      * @return string The formatted number.
      */
-    private function formatWithDecimalPlaces($number, $decimals, $minDecimalPlaces) {
+    private static function formatWithDecimalPlaces($number, $decimals, $minDecimalPlaces) {
         $formattedNumber = \number_format($number, $decimals);
 
         if ($decimals === 2 && \substr($formattedNumber, -1) === '0') {
@@ -97,5 +97,30 @@ class Math extends \Discussify\Application {
         }
 
         return $formattedNumber;
+    }
+
+    /**
+     * Calculates the total number of entries to load for the next request.
+     * 
+     * @param array|int $total - The array containing the entries or a total integer.
+     * @param int $limit - The limit of how many entries to load.
+     * @param int $index - The last index.
+     * @return int - The total number of entries to load.
+     */
+    public static function calculateEntriesToLoad($total, $limit, $index) {
+        if (\is_array($total)) {
+            $totalEntries = \count($total);
+        } else {
+            $totalEntries = $total;
+        }
+
+        if ($index < $totalEntries) {
+            $remainingEntries = $totalEntries - $index;
+            $entriesToLoad = \min($remainingEntries, $limit);
+        } else {
+            $entriesToLoad = 0;
+        }
+
+        return $entriesToLoad;
     }
 }

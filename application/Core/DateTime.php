@@ -57,17 +57,17 @@ class DateTime extends \Discussify\Application {
      */
     public static function getTimeDifference($timestamp) {
         $difference = \time() - $timestamp;
-
+    
         if ($difference < 1) {
             return self::localization()->getWords('global', 'just_now');
         } elseif ($difference < 60) {
-            return self::localization()->quickReplace('global', 'second' . $difference != 1 ? 's' : '' . '_ago', 'total', $difference);
+            return self::localization()->quickReplace('global', 'second' . ($difference != 1 ? 's' : '') . '_ago', 'total', $difference);
         } elseif ($difference < 3600) {
             $minutes = \floor($difference / 60);
-            return self::localization()->quickReplace('global', 'minute' . $minutes != 1 ? 's' : '' . '_ago', 'total', $minutes);
+            return self::localization()->quickReplace('global', 'minute' . ($minutes != 1 ? 's' : '') . '_ago', 'total', $minutes);
         } elseif ($difference < 86400) {
-            $hours = \floor($difference . 3600);
-            return self::localization()->quickReplace('global', 'hour' . $hours != 1 ? 's' : '' . '_ago', 'total', $hours);
+            $hours = \floor($difference / 3600);
+            return self::localization()->quickReplace('global', 'hour' . ($hours != 1 ? 's' : '') . '_ago', 'total', $hours);
         }
 
         return null;
@@ -120,13 +120,13 @@ class DateTime extends \Discussify\Application {
         $specificMember = null;
 
         foreach ($options as $k => $v) {
-            if ($k === 'dateOnly' && $v) {
+            if ($k == 'dateOnly' && $v) {
                 $dateOnly = true;
-            } elseif ($k === 'timeOnly' && $v) {
+            } elseif ($k == 'timeOnly' && $v) {
                 $timeOnly = true;
-            } elseif ($k === 'timeAgo' && $v) {
+            } elseif ($k == 'timeAgo' && $v) {
                 $timeAgo = true;
-            } elseif ($k === 'memberId') {
+            } elseif ($k == 'memberId') {
                 $specificMember = $v;
             }
         }
@@ -134,12 +134,12 @@ class DateTime extends \Discussify\Application {
         $format = $dateOnly ? self::user()->getDateFormat($specificMember) :
             ($timeOnly ? self::user()->getTimeFormat($specificMember) :
             self::user()->getDateTimeFormat($specificMember));
-
-        $memberTimeAgo = $specificMember === null ? self::user()->timeAgo() : self::user()->timeAgo($specificMember);
-
+                
+        $memberTimeAgo = $specificMember == null ? self::user()->timeAgo() : self::user()->timeAgo($specificMember);
+        
         if ($timeAgo) {
             $timeDifference = self::getTimeDifference($timestamp);
-            return ($memberTimeAgo && $timeDifference !== null) ? $timeDifference : \date($format, $timestamp);
+            return ($memberTimeAgo && $timeDifference != null) ? $timeDifference : \date($format, $timestamp);
         }
 
         return \date($format, $timestamp);

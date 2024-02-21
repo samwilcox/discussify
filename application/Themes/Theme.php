@@ -33,6 +33,22 @@ class Theme extends \Discussify\Application {
     protected static $instance;
 
     /**
+     * Populates the array collection of various CSS classes.
+     */
+    public function __construct() {
+        self::user()->populateVarsUsingOutput([
+            'noPhotoClass' => self::getThemePartial('Global', 'Class', 'NoPhoto'),
+            'noPhotoThumbnailClass' => self::getThemePartial('Global', 'Class', 'NoPhotoThumbnail'),
+            'photoClass' => self::getThemePartial('Global', 'Class', 'Photo'),
+            'photoThumbnailClass' => self::getThemePartial('Global', 'Class', 'PhotoThumbnail'),
+            'primaryButtonClass' => self::getThemePartial('Global', 'Class', 'PrimaryButton'),
+            'secondaryButtonClass' => self::getThemePartial('Global', 'Class', 'SecondaryButton'),
+            'tertiaryButtonClass' => self::getThemePartial('Global', 'Class', 'TertiaryButton'),
+            'liteButtonClass' => self::getThemePartial('Global', 'Class', 'LiteButton')
+        ]);
+    }
+
+    /**
      * Returns singleton instance of this class.
      * 
      * @return object - Singleton instance.

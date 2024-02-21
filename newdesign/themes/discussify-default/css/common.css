@@ -59,3 +59,5 @@ footer { width: auto; background-color: #000; color: #FFF; padding-top: 8px; pad
 .tag { display: inline-block; margin-left: 0; }
 .tag ~ .tag { margin-left: 6px; }
 .item-rows i { width: 24px; }
+.forums-list-child i { padding-left: 8px; margin-right: 8px; }
+.ajax-load-bar { position: fixed; top: 0; left: 0; width: 500px; height: 10px; background-color: #0C356A; }

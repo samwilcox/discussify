@@ -6,6 +6,12 @@ var triggeredElementList = null;
 var searchOptShown = false;
 var searchOptSelected = {};
 var json;
+var currentDialogElement = null;
+var currentForumFilter = null;
+var ajaxUrl;
+var selectedForum = null;
+var topicsLoadLimit = 0;
+var topicsCurrentIndex = 0;
 
 /**
  * Items in here execute when the document is ready.
@@ -37,6 +43,8 @@ $(document).ready(function() {
             generateTagCloud();
         }
     }
+
+    ajaxUrl = json.wrapper;
 });
 
 /**
@@ -44,71 +52,6 @@ $(document).ready(function() {
  */
 function parseJson() {
     json = JSON.parse($("#app-json").html());
-}
-
-/**
- * Toggles the side bar from size to size.
- * @param {object} e - Element instance.
- */
-function toggleSideBar(e) {
-    var initial = true;
-    var collapseIcon = $(e).data('collapse');
-    var expandIcon = $(e).data('expand');
-    var sideBar = $("#" + $(e).data('side-bar'));
-    var fullLinks = $("#" + $(e).data('full'));
-    var condensedLinks = $("#" + $(e).data('condensed'));
-    var icon = $("#" + $(e).data('icon'));
-    var toggleLink = $("#" + $(e).data('link'));
-    var bottomFull = $("#" + $(e).data('bottom-links-full'));
-    var bottomMin = $("#" + $(e).data('bottom-links-min'));
- 
-    if (!isAnimating) {
-        isAnimating = true;
-
-        if (isLeft) {
-            fullLinks.hide();
-            condensedLinks.show();
-            bottomMin.css({'display':'block'});
-            bottomFull.hide();
-            bottomMin.show();
-            bottomMin.css({'display':'inline'});
-
-            icon.removeClass(expandIcon).addClass(collapseIcon);
-
-            sideBar.animate({
-                right: '-=240px',
-                width: '60px'
-            }, 700);
-
-            toggleLink.animate({
-                left: '60px'
-            }, 700, function() {
-                isAnimating = false;
-            });
-        } else {
-            setTimeout(function() {
-                fullLinks.show();
-                condensedLinks.hide();
-                bottomFull.show();
-                bottomMin.hide();
-            }, 1000);
-
-        icon.removeClass(collapseIcon).addClass(expandIcon);
-        
-            sideBar.animate({
-                right: '+=240px',
-                width: '210px'
-            }, 700);
-
-            toggleLink.animate({
-                left: '210px'
-            }, 700, function() {
-                isAnimating = false;
-            });
-        }
-    
-        isLeft = !isLeft;
-    }
 }
 
 /**
@@ -149,34 +92,6 @@ function openDropDownMenu(e)  {
     ignoredElements.push($(e).data('link'));
     currentDropDown = $(e).data('menu');
     triggeredElementList = ignoredElements;
-}
-
-/**
- * Displays the search options selection.
- */
-function showSearchOptions(e) {
-    if (!searchOptShown) {
-        $("#" + $(e).data('options')).fadeIn();
-    }
-}
-
-/**
- * Triggered when the top search button is clicked.
- * @param {object} e - Element instance. 
- */
-function searchOptionSelect(e) {
-    var optionText = $("#" + $(e).data('text'));
-    var selectedOption = $(e).data('selected');
-    var checkbox = $(e).data('checkbox');
-
-    optionText.text(selectedOption);
-
-    $("#so-icon-" + searchOptSelected.toLowerCase()).html('');
-    $("#so-" + searchOptSelected.toLowerCase()).removeClass(json.opt_selected_class);
-    $("#so-icon-" + selectedOption.toLowerCase()).html('<i class="' + checkbox + '"></i> ');
-    $("#so-" + selectedOption.toLowerCase()).addClass(json.search_opt_selected_class);
-
-    searchOptSelected = $(e).data('selected');
 }
 
 /**
@@ -234,4 +149,132 @@ function generateTagCloud() {
         var fontSize = Math.floor(Math.random() * 20) + 12;
         tag.style.fontSize = fontSize + 'px';
     });
+}
+
+/**
+ * Toggles the background disabler element.
+ * @param {string} mode - Mode to perform. 
+ */
+function toggleBackgroundDisabler(mode) {
+    if (mode == 'show') {
+        $("#background-disabler").fadeIn();
+    } else {
+        $("#background-disabler").fadeOut();
+    }
+}
+
+/**
+ * Opens the specified dialog element.
+ */
+function openDialog() {
+    var dialog = null;
+    var dialogWidth = null;
+
+    if (arguments.length == 1) {
+        dialog = $("#" + $(arguments[0]).data('dialog'));
+        dialogWidth = $("#" + $(arguments[1].data('width')));
+    } else {
+        dialog = $("#" + arguments[0]);
+        dialogWidth = arguments[1];
+    }
+
+    dialog.css({"width":dialogWidth + "px"});
+
+    if (currentDialogElement != null) {
+        $("#" + currentDialogElement).fadeOut();
+        toggleBackgroundDisabler();
+        currentDialogElement = null;
+    }
+
+    toggleBackgroundDisabler('show');
+    dialog.fadeIn({queue: false, duration: 'slow'});
+    dialog.animate({'marginTop':'+=30px'}, 400, 'easeInQuad');
+    currentDialogElement = dialog.attr('id');
+}
+
+/**
+ * Closes the current open dialog element.
+ */
+function closeDialog() {
+    if (currentDialogElement != null) {
+        $("#" + currentDialogElement).fadeOut({queue: false, duration: 'slow'});
+        $("#" + currentDialogElement).animate({'marginTop':'-=30px'}, 400, 'easeOutQuad');
+        toggleBackgroundDisabler();
+        currentDialogElement = null;
+    }
+}
+
+/**
+ * Capitalizes the first letter of the given string and makes the rest
+ * lower case.
+ * @param {string} inputString - String to capitalize the first letter for.
+ * @return {string} - Modified string.
+ */
+function firstToUpper(inputString) {
+    return inputString.charAt(0).toUpperCase() + inputString.slice(1).toLowerCase();
+}
+
+/**
+ * Changes the forum filter for the user.
+ * @param {object} e - Element instance object.
+ */
+function forumFilterSelect(e) {
+    var item = $(e).data('item');
+    var name = firstToUpper(item);
+    var button = $("#forum-filter-button");
+    var nameLower = name.toLowerCase();
+    var spanElement = $("#forum-filter-span-" + nameLower);
+    var iconElement = $("#forum-filter-icon-" + nameLower);
+    var currentSpan = $("#forum-filter-span-" + currentForumFilter);
+    var currentIcon = $("#forum-filter-icon-" + currentForumFilter);
+    var postData = {
+        filter: nameLower,
+        forum: selectedForum
+    };
+
+    ajaxPost('setforumfilter', postData, function(response) {
+        checkForError(response);
+        button.html(name);
+        currentSpan.removeClass(json.forum_filter_sel_class);
+        currentIcon.html('ddd');
+        spanElement.addClass(json.forum_filter_sel_class);
+        iconElement.html(atob(json.checkmark_icon));
+        currentForumFilter = nameLower;
+        console.log(response.filter);
+        $("#ajax-topics-content").html(response.topics);
+        topicsCurrentIndex = topicsLoadLimit;
+        $("#ajax-topics-lm-button").show();
+        console.log(response.info);
+    });
+}
+
+/**
+ * Loads more topics via AJAX request.
+ */
+function loadMoreTopics() {
+    var getData = {
+        forumid: selectedForum,
+        index: topicsCurrentIndex
+    };
+
+    ajaxGet('loadmoretopics', getData, function(response) {
+        checkForError(response);
+        console.log(response);
+        if (response.hideButton) {
+            $("#ajax-topics-lm-button").hide();
+        }
+
+        topicsCurrentIndex = response.index;
+
+        $("#ajax-topics-content").append(response.topics);
+    });
+}
+
+/**
+ * Sends the user to the specified URL address.
+ * @param {e} e - Element instance. 
+ */
+function onDivClick(e) {
+    var url = $(e).data('url');
+    window.location.href = url;
 }

@@ -280,4 +280,16 @@ WHERE id = '{{id}}'
 QUERY;
 }
 
+/**
+ * SQL query that updates a given member field in the database.
+ */
+public function updateUserField() {
+return <<<QUERY
+UPDATE {$this->prefix}users
+SET
+{{field}} = '{{value}}'
+WHERE id = '{{id}}'
+QUERY;
+}
+
 }

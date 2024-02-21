@@ -55,4 +55,7 @@ class Feature extends \Discussify\Type\Types {
 
     // Whether the user can select a theme.
     const THEME_SELECT = 'themeSelect';
+
+    // Whether the user can configure their own block placements.
+    const BLOCKS = 'blocks';
 }

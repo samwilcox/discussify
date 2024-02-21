@@ -14,14 +14,39 @@
         <script src="${baseUrl}/public/js/vendor/jquery-ui.js?time=${timestamp}"></script>
         <script src="${baseUrl}/public/js/vendor/bootstrap.bundle.min.js?time=${timestamp}"></script>
         <script src="${baseUrl}/public/js/common.js?time=${timestamp}"></script>
+        <script src="${baseUrl}/public/js/ajax.js?time=${timestamp}"></script>
         <script type="application/json" id="app-json">
             {
-                "tag_cloud":true
+                "tag_cloud":true,
+                "wrapper":"${wrapper}",
+                "lang_ajax_error":"${[global][ajaxErrorDialog]}",
+                "ajax_error_html":"${ajaxHtml}",
+                "forum_filter_sel_class":"drop-down-menu-item-selected",
+                "checkmark_icon":"${checkmarkIcon}",
+                "ajax_session":"${ajaxSessionId}"
             }
         </script>
+        <script>currentForumFilter = 'latest'; topicsCurrentIndex = ${topicsLoadLimit}; topicsLoadLimit = ${topicsLoadLimit};</script>
     </head>
 <body>
-    ${languageDropDown}${themeDropDown}${extendedMenuDropDown}
+    ${languageDropDown}${themeDropDown}${extendedMenuDropDown}${dropdowns}
+    <div class="ajax-load-bar" id="ajax-load-bar"></div>
+    <div class="background-disabler" id="background-disabler" onclick="closeDialog();"></div>
+    <div class="dialog" id="dialog-ajax-error" style="width: 550px;">
+        <div class="dialog-title">
+            <div class="dialog-title-grid">
+                <div><i class="fa-solid fa-triangle-exclamation"></i> ${[global][ajaxErrorDialogTitle]}</div>
+                <div class="dialog-title-x">
+                    <a href="javascript:void(0);" onclick="closeDialog();" data-toggle="tooltip" data-placement="top" title="${[global][dialogClose]}"><i class="fa-solid fa-xmark"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-body">${[global][ajaxErrorDialog]}<div class="ajax-error-box" id="ajax-error-box"></div>
+        </div>
+        <div class="dialog-footer">
+            <span class="dialog-primary-button"><a href="javascript:void(0);" onclick="closeDialog();">${[global][dialogCloseButton]}</a></span>
+        </div>
+    </div>
     <div class="drop-down-menu" id="dropdown-filter">
         <span class="drop-down-menu-items">
         <span class="drop-down-menu-item-selected"><a href="javascript:void(0);"><i class="fa-regular fa-circle-check"></i>Latest</a></span>
@@ -59,3 +84,33 @@
         </div>
         <article>
             <div class="floater">
+                ${blockBegin}
+                ${blockLeftBegin}
+                ${leftBlocks}
+                ${blockLeftEnd}
+                ${blockCenterBegin}
+                ${body}
+                ${blockCenterEnd}
+                ${blockRightBegin}
+                ${rightBlocks}
+                ${blockRightEnd}
+                ${blockEnd}
+        </article>
+        <footer>
+            <div class="floater">
+                <div class="footer-grid">
+                    <div class="footer-grid-left">
+                        ${allTimes}
+                    </div>
+                    <div class="footer-grid-center">
+                        ${timeNow}
+                    </div>
+                    <div class="footer-grid-right">
+                        ${[global][poweredBy]} <strong><a href="https://www.discussify.com" target="_blank">Discussify</a></strong> v0.1.0
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

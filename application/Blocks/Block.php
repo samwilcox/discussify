@@ -43,7 +43,7 @@ class Block extends \Discussify\Application {
     }
 
     /**
-     * Returns the block for the specified parameters.
+     * Returns the blocks for the specified parameters.
      * 
      * @param string $controller - The name of the controller.
      * @param string $action - The name of the action.
@@ -51,51 +51,62 @@ class Block extends \Discussify\Application {
      * @return mixed - Block source.
      */
     public static function get($controller = 'index', $action = 'index', $section = 'left') {
-        $data = self::cache()->massGetData(['blocks' => 'blocks', 'placement' => 'block_placement']);
-        $found = false;
+        $blocks = self::user()->blocks();
         $placements = [];
-        $blockPlacement = '';
+        $blockOutput = '';
 
-        foreach ($data->placement as $place) {
-            if ($place->controller === $controller && $place->action === $action && $place->section === $section) {
-                $placements[$place->sort_order] = $place->id;
+        for ($i = 0; $i < \count($blocks); $i++) {
+            if ($blocks[$i]['controller'] === $controller && $blocks[$i]['action'] === $action && $blocks[$i]['section'] === $section) {
+                $placements[$blocks[$i]['order']] = $i;
             }
         }
 
-        foreach ($data->placement as $place) {
-            if ($place->controller === 'all' && $place->action === 'all' && $place->section === $section) {
-                $placements[$place->sort_order] = $place->id;
+        for ($i = 0; $i < \count($blocks); $i++) {
+            if ($blocks[$i]['controller'] === 'all' && $blocks[$i]['action'] === 'all' && $blocks[$i]['section'] === $section) {
+                $placements[$blocks[$i]['order']] = $i;
             }
-         }
+        }
 
-         \ksort($placements);
+        \ksort($placements);
 
-         foreach ($placements as $k => $v) {
-            foreach ($data->placement as $place) {
-                if ($place->id === $v) {
-                    foreach ($data->blocks as $block) {
-                        if ($block->id === $place->id) {
-                            $blockTitle = $block->title;
-                        }
-                    }
-
-                    $blockOutput = self::getBlock($blockTitle);
+        foreach ($placements as $k => $v) {
+            for ($i = 0; $i < \count($blocks); $i++) {
+                if ($i === $v) {
+                    $blockOutput .= self::getBlock($blocks[$i]['title']);
                 }
             }
-         }
+        }
 
-         return \strlen($blockOutput) < 1 ? null : $blockOutput;
+        return \strlen($blockOutput) < 1 ? null : $blockOutput;
     }
 
     /**
-     * Returns whether blocks exist for the specified parameters.
+     * Returns whether or not if there are blocks for the specified parameters.
      * 
      * @param string $controller - The name of the controller.
      * @param string $action - The name of the action.
-     * @param string $section - The section to place the block.
-     * @return bool - True if has blocks, false otherwise.
+     * @param string $section - The section name.
+     * @return bool - True if blocks are present, false otherwise.
      */
     public static function haveBlocks($controller = 'index', $action = 'index', $section = 'left') {
-        
+        $blocks = self::user()->blocks();
+
+        foreach ($blocks as $block) {
+            if (($block['controller'] === $controller || $block['controller'] == 'all') && ($block['action'] === $action || $block['action'] === 'all') && $block['section'] === $section) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns the requested block source.
+     * 
+     * @param string $block - The name of the block.
+     * @return mixed - Block source.
+     */
+    public static function getBlock($block) {
+        return self::blocksHelper()->getRequestedBlock($block);
     }
 }

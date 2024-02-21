@@ -270,8 +270,25 @@ class Globals extends \Discussify\Application {
 
         self::$vars['allTimes'] = self::localization()->quickMultiWordReplace('global', 'allTimes', [
             'timeZone' => self::user()->getTimeZone(),
-            'gmt'      => \sprintf('(GMT %s)', $gmt->format('P'))
+            'gmt'      => \sprintf('GMT %s', $gmt->format('P'))
         ]);
+
+        self::$vars['timeNow'] = self::localization()->quickMultiWordReplace('global', 'timeNow', [
+            'icon' => self::output()->getPartial('Global', 'Icon', 'Clock'),
+            'time' => self::dateTime()->parse(\time(), ['timeOnly' => true])
+        ]);
+
+        self::$vars['ajaxHtml'] = \base64_encode(self::output()->getPartial('Global', 'Ajax', 'ErrorModel'));
+        self::$vars['checkmarkIcon'] = \base64_encode(self::output()->getPartial('Global', 'Icon', 'Checkmark'));
+
+        if (isset(self::vars()->dropdowns)) {
+            self::$vars['dropdowns'] = self::vars()->dropdowns;
+        } else {
+            self::$vars['dropdowns'] = '';
+        }
+
+        self::$vars['ajaxSessionId'] = \base64_encode(self::session()->id());
+        self::$vars['topicsLoadLimit'] = self::user()->entryLimit('topics');
 
         return self::$vars;
     }

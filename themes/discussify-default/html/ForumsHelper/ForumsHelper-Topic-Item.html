@@ -1,0 +1,24 @@
+<div class="topic-item" data-url="${url}" onclick="onDivClick(this);">
+    <div class="topic-item-grid">
+        <div>${photo}</div>
+        <div>
+            <div class="topic-item-title-grid">
+                <span class="topic-item-title">${topicTitle}</span>
+            </div>
+            <div class="topic-item-preview">${preview}</div>
+            <div class="topic-item-stats">
+                <span class="topic-item-stat-item" data-toggle="tooltip" data-placement="top" title="${postsTooltip}"><i class="fa-regular fa-comments"></i>${totalPosts}</span>
+                <span class="topic-item-stat-item" data-toggle="tooltip" data-placement="top" title="${viewsTooltip}"><i class="fa-solid fa-eye"></i>${totalViews}</span>
+            </div>
+        </div>
+        <div class="topic-item-info">
+            <div class="topic-item-info-grid">
+                <div>${forumBubble}</div>
+                <div class="topic-item-info-grid-bottom-grid">
+                    <div class="topic-item-info-grid-bottom">${byAuthor}</div>
+                    <div class="topic-item-info-grid-bottom">${replyAuthor}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -27,3 +27,5 @@ footer a:hover { color: #FFF0CE; text-decoration: none; transition: 0.4s; }
 .item-rows a, .item-rows a:link, .item-rows a:active, .item-rows a:visited { color: #606060; text-decoration: none; transition: 0.4s; display: block; padding: 4px; margin-top: 4px; }
 .item-rows a:hover { color: #FFC436; text-decoration: none; transition: 0.4s; }
 .item-rows a:first-child { margin-top: 0px; }
+.forums-list-child-link a, .forums-list-child-link a:link, .forums-list-child-link a:active, .forums-list-child-link a:visited { color: #606060; text-decoration: none; transition: 0.4s; padding: 4px; margin-top: 4px; display: inline-block; }
+.forums-list-child-link a:hover { color: #FFC436; text-decoration: none; transition: 0.4s; }

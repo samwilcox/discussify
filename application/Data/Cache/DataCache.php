@@ -61,7 +61,9 @@ class DataCache extends \Discussify\Application {
             'posts',
             'tags',
             'blocks',
-            'block_placement'
+            'user_photos',
+            'avatar_gallery',
+            'likes'
         ];
 
         self::$sorting = [
@@ -77,7 +79,9 @@ class DataCache extends \Discussify\Application {
             'posts' => ' ORDER BY id ASC',
             'tags' => ' ORDER BY id ASC',
             'blocks' => ' ORDER BY id ASC',
-            'block_placement' => ' ORDER BY id ASC'
+            'user_photos' => ' ORDER BY id ASC',
+            'avatar_gallery' => ' ORDER BY id ASC',
+            'likes' => ' ORDER BY id ASC'
         ];
     }
 

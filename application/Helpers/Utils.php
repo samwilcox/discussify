@@ -193,7 +193,7 @@ class Utils extends \Discussify\Application {
      * @param array $b - Second array.
      */
     public static function sortBySortOrder($a, $b) {
-        return $a['sort_order'] - $b['sort_order'];
+        return $a->sort_order - $b->sort_order;
     }
 
     /**
@@ -203,5 +203,36 @@ class Utils extends \Discussify\Application {
      */
     public static function setPageTitle($title) {
         self::vars()->pageTitle = $title;
+    }
+
+    /**
+     * Limits the given string by the given limit.
+     * 
+     * @param string $string - The string to limit.
+     * @param int $limit - The max characters to return.
+     * @return string - Resulting string value.
+     */
+    public static function limitString($string, $limit) {
+        if (\mb_strlen($string) > $limit) {
+            $limitedString = \mb_substr($string, 0, $limit);
+            $limitedString .= '...';
+
+            return $limitedString;
+        } else {
+            return $string;
+        }
+    }
+
+    /**
+     * Returns the sort by string that is currently set.
+     * 
+     * @return string - Sort by string.
+     */
+    public static function getSortBy() {
+        if (isset($_SESSION['discussify_forum_filter'])) {
+            return $_SESSION['discussify_forum_filter'];
+        } else {
+            return self::user()->signedIn() ? self::user()->sortBy : self::settings()->topics_sort_by;
+        }
     }
 }

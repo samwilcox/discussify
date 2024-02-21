@@ -40,6 +40,7 @@ class Application {
         \Discussify\Localization\Localization::i();
         \Discussify\Core\Registry::i();
         \Discussify\Helpers\Utils::i()->initializeBreadcrumbs();
+        \Discussify\Core\Vars::i()->parsed = [];
 
         $controller = isset(\Discussify\Core\Request::i()->controller) ? \ucfirst(\Discussify\Core\Request::i()->controller) : 'Index';
         $controller = $controller . 'Controller';
@@ -98,6 +99,12 @@ class Application {
     public static function type() { return \Discussify\Type\Types::i(); }
     public static function output() { return \Discussify\Output\Output::i(); }
     public static function seo() { return \Discussify\Url\Seo::i(); }
-    public static function forums() { return \Discussify\Helpers\Forums::i(); }
+    public static function forumsHelper() { return \Discussify\Helpers\Forums::i(); }
     public static function block() { return \Discussify\Blocks\Block::i(); }
+    public static function blocksHelper() { return \Discussify\Helpers\Blocks::i(); }
+    public static function urls() { return \Discussify\Url\Url::i(); }
+    public static function redirect() { return \Discussify\Url\Redirect::i(); }
+    public static function textParsingHelper() { return \Discussify\Helpers\TextParsing::i(); }
+    public static function buttonsHelper() { return \Discussify\Helpers\Buttons::i(); }
+    public static function ajaxHelper() { return \Discussify\Helpers\Ajax::i(); }
 }

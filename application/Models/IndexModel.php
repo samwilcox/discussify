@@ -43,6 +43,22 @@ class IndexModel extends \Discussify\Models\BaseModel {
     public function appIndex() {
         self::utils()->newBreadcrumb(self::localization()->getWords('index', 'forumsBreadcrumbTitle'), self::seo()->url('index'), true, false);
         self::utils()->setPageTitle(self::localization()->getWords('index', 'forumsPageTitle'));
+
+        self::$vars['topics'] = self::forumsHelper()->getTopicsList(['index' => 0]);
+
+        self::$vars['newTopicButton'] = self::buttonsHelper()->get(
+            1,
+            self::localization()->getWords('buttonshelper', 'newTopic'),
+            self::seo()->url('post'),
+            self::output()->getPartial('Global', 'Icon', 'Plus')
+        );
+
+        $filter = self::forumsHelper()->getFilter();
+
+        self::$vars['filterButton'] = $filter->button;        
+        self::vars()->dropdowns .= $filter->dropdown;
+        self::$vars['loadMoreButton'] = self::ajaxHelper()->topicsLoadMore();
+
         return self::$vars;
     }
 

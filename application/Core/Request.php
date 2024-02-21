@@ -74,35 +74,30 @@ class Request extends \Discussify\Application {
         foreach ($_GET as $k => $v) self::$incoming[$k] = \filter_var($v, FILTER_SANITIZE_STRING);
         foreach ($_POST as $k => $v) self::$incoming[$k] = \filter_var($v, FILTER_SANITIZE_STRING);
 
-        $bits = null;
+        if (!isset(self::$incoming['controller'])) {
+            $scriptPos = \strpos($_SERVER['REQUEST_URI'], \pathinfo($_SERVER['SCRIPT_NAME'] . '.php', PATHINFO_FILENAME)) + \strlen(\pathinfo($_SERVER['SCRIPT_NAME'] . '.php', PATHINFO_FILENAME));
+            $scriptQPos = \strpos($_SERVER['REQUEST_URI'], \pathinfo($_SERVER['SCRIPT_NAME'] . '.php?', PATHINFO_FILENAME)) + \strlen(\pathinfo($_SERVER['SCRIPT_NAME'] . '.php?', PATHINFO_FILENAME));
 
-        if (self::settings()->seo_enabled) {
-            if (\strlen($_SERVER['QUERY_STRING']) > 0) {
-                if (!\stripos($_SERVER['QUERY_STRING'], '&')) {
-                    if (\count($_POST) < 1) {
-                        $bits = \explode('/', $_SERVER['QUERY_STRING']);
-                    }
-                }
-            }
-        }
+            if (\strlen($_SERVER['REQUEST_URI']) > $scriptQPos + 1) {
+                $queryString = \substr($_SERVER['REQUEST_URI'], \strpos($_SERVER['REQUEST_URI'], '?') + 1, \strlen($_SERVER['REQUEST_URI']));
+                $bits = \explode('/', $queryString);
+                $bits = \array_filter($bits);
+                $bits = \array_values($bits);
 
-        if ($bits !== null) {
-            \array_shift($bits);
+                self::$incoming['controller'] = isset($bits[0]) ? $bits[0] : 'index';
+                self::$incoming['action'] = isset($bits[1]) ? $bits[1] : 'index';
 
-            if (isset($bits[0])) self::$incoming['controller'] = $bits[0];
-            if (isset($bits[1])) self::$incoming['action'] = $bits[1];
-            
-            // Purge the controller and action from the array.
-            \array_slice($bits, 2);
-
-            if (\count($bits) > 0) {
-                for ($i = 0; $i < \count($bits); $i) {
+                $bits = \array_slice($bits, 2);
+                
+                for ($i = 0; $i < \count($bits); $i += 2) {
                     if (isset($bits[$i + 1])) {
                         self::$incoming[$bits[$i]] = $bits[$i + 1];
                     }
                 }
-            }
+            }           
         }
+
+        $bits = null;
     }
 
     /**

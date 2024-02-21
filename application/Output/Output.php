@@ -182,6 +182,8 @@ class Output extends \Discussify\Application {
 
         if (\count($globals) > 0) $vars = \array_merge($vars, $globals);
 
+        $vars = \array_merge($vars, self::blocksHelper()->getBlocksOutputVars(\strtolower($controller), \strtolower($action)));
+
         self::output($base, $vars);
     }
 
@@ -201,6 +203,8 @@ class Output extends \Discussify\Application {
 
         if (\count($globals) > 0) $vars = \array_merge($vars, $globals);
 
+        $vars = \array_merge($vars, self::blocksHelper()->getBlocksOutputVars(\strtolower($controller), \strtolower($action)));
+
         self::output($base, $vars);
     }
 
@@ -216,6 +220,8 @@ class Output extends \Discussify\Application {
         $globals = self::globals()->get();
 
         if (\count($globals) > 0) $vars = \array_merge($vars, $globals);
+
+        $vars = \array_merge($vars, self::blocksHelper()->getBlocksOutputVars(\strtolower($controller), \strtolower($action)));
 
         self::output($base, $vars);
     }
@@ -233,6 +239,8 @@ class Output extends \Discussify\Application {
         $globals = self::globals()->get();
 
         if (\count($globals) > 0) $vars = \array_merge($vars, $globals);
+
+        $vars = \array_merge($vars, self::blocksHelper()->getBlocksOutputVars(\strtolower($controller), \strtolower($action)));
 
         self::output($output, $vars);
     }
@@ -252,6 +260,8 @@ class Output extends \Discussify\Application {
         $globals = self::globals()->get();
 
         if (\count($globals) > 0) $vars = \array_merge($vars, $globals);
+
+        $vars = \array_merge($vars, self::blocksHelper()->getBlocksOutputVars(\strtolower($controller), \strtolower($action)));
 
         self::output($base, $vars);
     }
