@@ -37,3 +37,5 @@ footer a:hover { color: #FFF0CE; text-decoration: none; transition: 0.4s; }
 .dialog-secondary-button a:hover { color: #FFF; text-decoration: none; transition: 0.4s; background-color: #404040; }
 .dialog-tertiary-button a, .dialog-tertiary-button a:link, .dialog-tertiary-button a:active, .dialog-tertiary-button a:visited { color: #000; text-decoration: none; transition: 0.4s; background-color: #D8E8FA; display: inline-block; padding-left: 20px; padding-right: 20px; padding-top: 6px; padding-bottom: 6px; border-radius: 5px; }
 .dialog-tertiary-button a:hover { color: #000; text-decoration: none; transition: 0.4s; background-color: #8CBFF4; }
+.forum-menu-selected a, .forum-menu-selected a:link, .forum-menu-selected a:active, .forum-menu-selected a:visited { color:#0C356A; text-decoration: none; transition: 0.4s; font-weight: bold; }
+.forum-menu-selected a:hover { color: #0174BE; text-decoration: none; transition: 0.4s; }

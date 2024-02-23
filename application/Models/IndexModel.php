@@ -43,8 +43,14 @@ class IndexModel extends \Discussify\Models\BaseModel {
     public function appIndex() {
         self::utils()->newBreadcrumb(self::localization()->getWords('index', 'forumsBreadcrumbTitle'), self::seo()->url('index'), true, false);
         self::utils()->setPageTitle(self::localization()->getWords('index', 'forumsPageTitle'));
+        
+        $listArr['index'] = 0;
 
-        self::$vars['topics'] = self::forumsHelper()->getTopicsList(['index' => 0]);
+        if (self::user()->landingForum() != 'allforums') {
+            $listArr['forumId'] = (int)self::user()->landingForum();
+        }
+        
+        self::$vars['topics'] = self::forumsHelper()->getTopicsList($listArr);
 
         self::$vars['newTopicButton'] = self::buttonsHelper()->get(
             1,

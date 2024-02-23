@@ -53,4 +53,12 @@ class AjaxController extends \Discussify\Controllers\BaseController {
     public function loadMoreTopics() {
         self::$model->loadMoreTopics();
     }
+
+    /**
+     * Request when a user clicks on a forum from the menu.
+     * We load the topics for that forum.
+     */
+    public function forumItemSelect() {
+        self::$model->forumItemSelect();
+    }
 }

@@ -80,4 +80,19 @@ class AjaxModel extends \Discussify\Models\BaseModel {
 
         self::ajaxHelper()->send($ajax);
     }
+
+    /**
+     * Loads the specified forum.
+     */
+    public function forumItemSelect() {
+        $forumId = self::request()->forumid;
+        $landingForum = self::request()->landingforum;
+        $jsonArr['index'] = 0;
+
+        if ($landingForum != 'allforums') {
+            $jsonArr['forumId'] = $forumId;
+        }
+
+        self::ajaxHelper()->send(['status' => true, 'index' => 0, 'menu' => self::blocksHelper()->forumsList($landingForum), 'topics' => self::forumsHelper()->getTopicsList($jsonArr)]);
+    }
 }

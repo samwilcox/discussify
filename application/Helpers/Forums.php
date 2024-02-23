@@ -292,9 +292,9 @@ class Forums extends \Discussify\Application {
     private static function getTopics($options) {
         $topicsData = [];
         $data = self::cache()->massGetData(['topics' => 'topics', 'posts' => 'posts']);
-
+        
         if (isset($options['forumId'])) {
-            $topicsData = self::getTopicData($forumId);
+            $topicsData = self::getTopicData($options['forumId']);
         } else {
             $topicsData = self::getTopicData();
         }
@@ -390,6 +390,7 @@ class Forums extends \Discussify\Application {
      */
     public static function getTopicsList($options = []) {
         $topics = '';
+        
         $topicsData = self::getTopics($options);
         $orderedTopics = self::sortData($topicsData);
 

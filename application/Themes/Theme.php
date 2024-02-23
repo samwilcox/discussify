@@ -44,7 +44,8 @@ class Theme extends \Discussify\Application {
             'primaryButtonClass' => self::getThemePartial('Global', 'Class', 'PrimaryButton'),
             'secondaryButtonClass' => self::getThemePartial('Global', 'Class', 'SecondaryButton'),
             'tertiaryButtonClass' => self::getThemePartial('Global', 'Class', 'TertiaryButton'),
-            'liteButtonClass' => self::getThemePartial('Global', 'Class', 'LiteButton')
+            'liteButtonClass' => self::getThemePartial('Global', 'Class', 'LiteButton'),
+            'forumMenuSelectedClass' => self::getThemePartial('Global', 'Class', 'ForumMenuSelected')
         ]);
     }
 

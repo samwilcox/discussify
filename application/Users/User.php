@@ -86,6 +86,7 @@ class User extends \Discussify\Application {
                 'secondaryButton' => null,
                 'tertiaryButton' => null,
                 'liteButton' => null,
+                'forumMenuSelected' => null
             ],
             'photoId' => null,
             'photoType' => null,
@@ -102,7 +103,8 @@ class User extends \Discussify\Application {
                 'forums' => false,
                 'comments' => false,
                 'replacementChar' => '*'
-            ]
+            ],
+            'landingForum' => null
         ];
     }
 
@@ -165,6 +167,7 @@ class User extends \Discussify\Application {
                     self::$user->censoring->forums = \unserialize($member->censoring)['forumsEnabled'];
                     self::$user->censoring->comments = \unserialize($member->censoring)['commentsEnabled'];
                     self::$user->censoring->replacementChar = \unserialize($member->censoring)['replacementChar'];
+                    self::$user->landingForum = $member->landing_forum;
                     break;
                 }
             }
@@ -195,6 +198,8 @@ class User extends \Discussify\Application {
             self::$user->censoring->forums = self::settings()->word_censoring_enabled;
             self::$user->censoring->comments = self::settings()->word_censoring_enabled;
             self::$user->censoring->replacementChar = self::settings()->word_censoring_replacement_char;
+            self::$user->topicsSortBy = self::settings()->topics_sort_by;
+            self::$user->landingForum = self::settings()->landing_forum;
         }
 
         $data = self::cache()->getData('installed_themes');
@@ -228,6 +233,7 @@ class User extends \Discussify\Application {
         self::$user->classes->secondaryButton = $arr['secondaryButtonClass'];
         self::$user->classes->tertiaryButton = $arr['tertiaryButtonClass'];
         self::$user->classes->liteButton = $arr['liteButtonClass'];
+        self::$user->classes->forumMenuSelected = $arr['forumMenuSelectedClass'];
     }
 
     /**
@@ -863,5 +869,14 @@ class User extends \Discussify\Application {
      */
     public static function getClass($className) {
         return self::$user->classes->$className;
+    }
+
+    /**
+     * Returns the user's or default landing forum to display on home page.
+     * 
+     * @return string - Landing forum (allforums or ID of forum).
+     */
+    public static function landingForum() {
+        return self::$user->landingForum;
     }
  }

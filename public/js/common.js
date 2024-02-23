@@ -12,6 +12,7 @@ var ajaxUrl;
 var selectedForum = null;
 var topicsLoadLimit = 0;
 var topicsCurrentIndex = 0;
+var forumMenuItemSelected = 'allforums';
 
 /**
  * Items in here execute when the document is ready.
@@ -277,4 +278,26 @@ function loadMoreTopics() {
 function onDivClick(e) {
     var url = $(e).data('url');
     window.location.href = url;
+}
+
+/**
+ * Triggered when the user clicks on a forum from the island forum menu.
+ * We just load the proper topics via AJAX and then highlight the forum menu item.
+ * @param {object} e - Element instance object. 
+ */
+function forumMenuItemSelect(e) {
+    var forumId = $(e).data('forumid');
+    var landingForum = $(e).data('landingforum');
+
+    var getData = {
+        forumid: forumId,
+        landingforum: landingForum
+    };
+
+    ajaxGet('forumitemselect', getData, function(response) {
+        checkForError(response);
+        topicsCurrentIndex = response.index;
+        $("#ajax-forums-menu-content").html(response.menu);
+        $("#ajax-topics-content").html(response.topics);
+    });
 }

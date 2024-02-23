@@ -93,13 +93,15 @@ class Blocks extends \Discussify\Application {
     /**
      * Builds the forums list block and returns it.
      * 
+     * @param string $landingForum - Optional landing forum item.
      * @return mixed - Forums list block source.
      */
-    private static function forumsList() {
+    public static function forumsList($landingForum = null) {
         $data = self::cache()->getData('forums');
+        $landing = $landingForum == null ? self::user()->landingForum() : $landingForum;
         $forums = '';
         $exist = true;
-    
+
         if (!self::user()->getForumPermissionsCheck(null, 'view')) {
             $message = self::output()->getPartial(
                 'Global',
@@ -182,7 +184,9 @@ class Blocks extends \Discussify\Application {
                                     'url' => self::seo()->url('forum', 'view', ['id' => self::urls()->getDualUrl($frm->id, $frm->title)]),
                                     'title' => $frm->title,
                                     'icon' => $icn,
-                                    'break' => $i > 0 ? self::output()->getPartial('Global', 'Tag', 'Break') : ''
+                                    'break' => $i > 0 ? self::output()->getPartial('Global', 'Tag', 'Break') : '',
+                                    'id' => $frm->id,
+                                    'class' => $landing == $frm->id ? self::user()->getClass('forumMenuSelected') : ''
                                 ]
                             );
 
@@ -200,7 +204,9 @@ class Blocks extends \Discussify\Application {
                     [
                         'icon' => $icon,
                         'title' => $forum->title,
-                        'childForums' => $children
+                        'childForums' => $children,
+                        'id' => $forum->id,
+                        'class' => $landing == $forum->id ? self::output()->getPartial('Global', 'Class', 'Tag', ['class' => self::user()->getClass('forumMenuSelected')]) : ''
                     ]
                 );
             }
@@ -210,7 +216,9 @@ class Blocks extends \Discussify\Application {
             'BlocksHelper',
             'ForumsList',
             'Block', [
-                'forums' => $exist ? $forums : $message
+                'forums' => $exist ? $forums : $message,
+                'id' => 'allforums',
+                'class' => $landing == 'allforums' ? self::output()->getPartial('Global', 'Class', 'Tag', ['class' => self::user()->getClass('forumMenuSelected')]) : ''
             ]
         );
     }

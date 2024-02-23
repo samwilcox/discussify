@@ -1,11 +1,13 @@
-                        <div class="island-header">${[blockshelper][forumsBlockTitle]}</div>
-                        <div class="island-content">
-                            <div class="island-content-padding">
-                                <div id="ajax-forumslist-block">
-                                    <span class="item-rows">
-                                        <a href="javascript:void(0);"><i class="fa-regular fa-comments"></i>${[blockshelper][allForums]}</a>
-                                        ${forums}
-                                    </span>
+                        <div id="ajax-forums-menu-content">
+                            <div class="island-header">${[blockshelper][forumsBlockTitle]}</div>
+                            <div class="island-content">
+                                <div class="island-content-padding">
+                                    <div id="ajax-forumslist-block">
+                                        <span class="item-rows">
+                                            <span id="forum-menu-${id}"${class}><a href="javascript:void(0);" data-landingforum="allforums" onclick="forumMenuItemSelect(this);"><i class="fa-regular fa-comments"></i>${[blockshelper][allForums]}</a></span>
+                                            ${forums}
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
